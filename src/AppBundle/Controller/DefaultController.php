@@ -13,9 +13,33 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+/*
+    $product = new Product();
+    $product->setName('A Foo Bar');
+    $product->setPrice('19.99');
+    $product->setDescription('Lorem ipsum dolor');
+
+    $em = $this->getDoctrine()->getManager();
+
+    $em->persist($product);
+    $em->flush();
+
+*/
+
+    /*
+$product = $this->getDoctrine()
+        ->getRepository('AppBundle:Product')
+        ->find($id);
+    */
+
+        /*$query = $repository->createQueryBuilder('p')
+    ->where('p.price > :price')
+    ->setParameter('price', '19.99')
+    ->orderBy('p.price', 'ASC')
+    ->getQuery();
+
+$products = $query->getResult();*/
+
+        return $this->render('default/index.html.twig');
     }
 }
