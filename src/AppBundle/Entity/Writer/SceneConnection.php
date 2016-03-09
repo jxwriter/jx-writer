@@ -20,17 +20,17 @@ class SceneConnection
     private $id;
 
     /**
-     * @ORM\Column(name="conditions", type="text")
+     * @ORM\Column(name="conditions", type="text", nullable=TRUE)
      */
     private $conditions;
 
     /**
-     * @ORM\Column(name="pattern", type="string", length=255)
+     * @ORM\Column(name="pattern", type="string", length=255, nullable=TRUE)
      */
     private $pattern;
 
     /**
-     * @ORM\Column(name="label", type="string", length=255)
+     * @ORM\Column(name="label", type="string", length=255, nullable=TRUE)
      */
     private $label;
 
@@ -49,7 +49,7 @@ class SceneConnection
     /**
      * @ORM\Column(type="integer")
      */
-    private $position;
+    private $position = 0;
 
 
     /**

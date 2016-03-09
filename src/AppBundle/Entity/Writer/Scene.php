@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Writer;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Scene
@@ -25,12 +26,12 @@ class Scene
     private $title;
 
     /**
-     * @ORM\Column(name="conditions", type="text")
+     * @ORM\Column(name="conditions", type="text", nullable=TRUE)
      */
     private $conditions;
 
     /**
-     * @ORM\Column(name="actions", type="text")
+     * @ORM\Column(name="actions", type="text", nullable=TRUE)
      */
     private $actions;
 

@@ -32,7 +32,7 @@ class Media
     private $format;
 
     /**
-     * @ORM\Column(name="conditions", type="text")
+     * @ORM\Column(name="conditions", type="text", nullable=TRUE)
      */
     private $conditions;
 

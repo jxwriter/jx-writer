@@ -27,7 +27,7 @@ class Project
     private $title;
 
     /**
-     * @ORM\Column(name="variables", type="text")
+     * @ORM\Column(name="variables", type="text", nullable=TRUE)
      */
     private $variables;
 

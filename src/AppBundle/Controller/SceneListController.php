@@ -6,25 +6,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends Controller
+class SceneListController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/scene/list", name="sceneList")
      */
     public function indexAction(Request $request)
     {
-/*
-    $product = new Product();
-    $product->setName('A Foo Bar');
-    $product->setPrice('19.99');
-    $product->setDescription('Lorem ipsum dolor');
 
-    $em = $this->getDoctrine()->getManager();
-
-    $em->persist($product);
-    $em->flush();
-
-*/
 
     /*
 $product = $this->getDoctrine()
@@ -40,6 +29,6 @@ $product = $this->getDoctrine()
 
 $products = $query->getResult();*/
 
-        return $this->render('default/index.html.twig');
+        return $this->render('writer/sceneList.html.twig');
     }
 }
