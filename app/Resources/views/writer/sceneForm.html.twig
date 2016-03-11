@@ -5,5 +5,7 @@
 
 
 {% block body %}
-    Hello.
+    {{ form_start(formScene) }}
+	{{ form_widget(formScene) }}
+	{{ form_end(formScene) }}
 {% endblock %}
