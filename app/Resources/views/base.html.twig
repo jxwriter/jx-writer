@@ -7,6 +7,15 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        
+        {% for flashType, flashContent in app.session.flashbag.all %}
+            {% for flash in flashContent %}
+                <div class="flash flash-{{ flashType }}">
+                     {{ flash }}
+                </div>
+             {% endfor %}
+        {% endfor %}
+
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

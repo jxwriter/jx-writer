@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+use AppBundle\Entity\Writer\Project;
 use AppBundle\Entity\Writer\Media;
 use AppBundle\Entity\Writer\Scene;
 use AppBundle\Entity\Writer\SceneConnection;
@@ -43,9 +44,10 @@ class FixtureController extends Controller
         return $connection;
     }
 
-    protected function makeScene($title){
+    protected function makeScene($title, $project){
         $scene = new Scene();
         $scene->setTitle($title);
+        $scene->setProject($project);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($scene);
@@ -58,13 +60,26 @@ class FixtureController extends Controller
      */
     public function indexAction(Request $request)
     {
+        
+        $em = $this->getDoctrine()->getManager();
 
-        $welcome = $this->makeScene("Welcome");
-        $bureau = $this->makeScene("Bureau");
-        $salon = $this->makeScene("Salon");
-        $secret = $this->makeScene("Secret");
-        $fin = $this->makeScene("Fin");
-        $finHappy = $this->makeScene("Fin !");
+        $projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
+        $project = $projectRepo->find(1);
+
+        $this->addFlash("warning", "Fixtures : Aborted (non-empty db)");
+        return $this->redirectToRoute('homepage');
+ 
+        $project = new Project();
+        $project->setTitle("Projet démo");
+
+        $em->persist($project);
+
+        $welcome = $this->makeScene("Welcome", $project);
+        $bureau = $this->makeScene("Bureau", $project);
+        $salon = $this->makeScene("Salon", $project);
+        $secret = $this->makeScene("Secret", $project);
+        $fin = $this->makeScene("Fin", $project);
+        $finHappy = $this->makeScene("Fin !", $project);
 
         $this->makeMediaText("Bienvenue dans la maison démo !", $welcome);
         $this->makeMediaText("Vous arrivez dans le bureau", $bureau);
@@ -85,9 +100,9 @@ class FixtureController extends Controller
 
         $this->makeConnection($secret, $finHappy, "Quitter la maison démo");
         
-        $em = $this->getDoctrine()->getManager();
         $em->flush();
 
+        $this->addFlash("notice", "Fixtures : OK.");
         return $this->redirectToRoute('homepage');
     }
 }
