@@ -3,11 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href="{{ asset('style.css') }}" />
     </head>
-    <body>
-        
+    <body class="{% block bodyClass %}{% endblock %}">
+    
+    <div id="page">
         {% for flashType, flashContent in app.session.flashbag.all %}
             {% for flash in flashContent %}
                 <div class="flash flash-{{ flashType }}">
@@ -17,6 +18,8 @@
         {% endfor %}
 
         {% block body %}{% endblock %}
+    </div>
+    
         {% block javascripts %}{% endblock %}
     </body>
 </html>

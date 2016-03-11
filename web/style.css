@@ -1,0 +1,57 @@
+body {
+	background-color: #dddddd;
+}
+
+#page {
+	margin: 0 auto;
+	padding: 0.5em 1em;
+	background-color: white;
+	width: 50%;
+	min-width: 500px;
+	min-width: 1000px;
+}
+
+.flash-notice {
+	color: green;
+}
+
+.flash-warning {
+	color: orange;
+}
+
+
+.previewProject h1, .previewProject h2 {
+	font-size: 1.2em;
+}
+
+.previewProject  li{
+	list-style: none;
+	font-size: 2.3em;
+	padding: 0.5em;
+	margin: 0.1em;
+	background-color: #dddddd;
+}
+
+.previewProject .medias li{
+	background-color: #aaaaaa;
+}
+
+.previewProject .patterns li{
+	font-size: .8em;
+}
+
+.previewProject input {
+	font-size: 1em;
+	padding: 0.5em;
+	
+}
+
+.previewProject  a {
+	text-decoration: none;
+	color: #333333;
+}
+
+.previewProject a:hover {
+	text-decoration: underline;
+	
+}

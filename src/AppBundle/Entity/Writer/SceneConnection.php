@@ -35,7 +35,7 @@ class SceneConnection
     private $label;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Scene")
+     * @ORM\ManyToOne(targetEntity="Scene", inversedBy="connections")
      * @ORM\JoinColumn(name="parent_scene_id", referencedColumnName="id")
      */
     private $parentScene;

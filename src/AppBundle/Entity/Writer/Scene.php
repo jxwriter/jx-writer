@@ -48,15 +48,15 @@ class Scene
     private $medias;
 
     /**
-     * @ORM\OneToMany(targetEntity="SceneConnection", mappedBy="scene")
+     * @ORM\OneToMany(targetEntity="SceneConnection", mappedBy="parentScene")
      */
-    private $childrenScenes;
+    private $connections;
 
 
     public function __construct()
     {
         $this->medias = new ArrayCollection();
-        $this->childrenScenes = new ArrayCollection();
+        $this->connections = new ArrayCollection();
     }
 
 
@@ -201,36 +201,36 @@ class Scene
     }
 
     /**
-     * Add childrenScene
+     * Add Connection
      *
-     * @param \AppBundle\Entity\Writer\SceneConnection $childrenScene
+     * @param \AppBundle\Entity\Writer\SceneConnection $connection
      *
      * @return Scene
      */
-    public function addChildrenScene(\AppBundle\Entity\Writer\SceneConnection $childrenScene)
+    public function addConnection(\AppBundle\Entity\Writer\SceneConnection $connection)
     {
-        $this->childrenScenes[] = $childrenScene;
+        $this->connections[] = $connection;
 
         return $this;
     }
 
     /**
-     * Remove childrenScene
+     * Remove Connection
      *
-     * @param \AppBundle\Entity\Writer\SceneConnection $childrenScene
+     * @param \AppBundle\Entity\Writer\SceneConnection $connection
      */
-    public function removeChildrenScene(\AppBundle\Entity\Writer\SceneConnection $childrenScene)
+    public function removeConnection(\AppBundle\Entity\Writer\SceneConnection $connection)
     {
-        $this->childrenScenes->removeElement($childrenScene);
+        $this->connections->removeElement($connection);
     }
 
     /**
-     * Get childrenScenes
+     * Get Connections
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChildrenScenes()
+    public function getConnections()
     {
-        return $this->childrenScenes;
+        return $this->connections;
     }
 }

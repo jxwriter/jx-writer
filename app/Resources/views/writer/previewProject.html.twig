@@ -1,11 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Super
-{% endblock %}
+{% block title %}{{ project.title }} / {{ scene.title }} (#{{ scene.id }}){% endblock %}
 
+{% block bodyClass %}previewProject{% endblock %}
 
 {% block body %}
-    <p>Aperçu du projet : ( {{ project.title }})</p>
-    <p>Scene : ( {{ scene.title }})</p>
+    <h1>{{ project.title }} / {{ scene.title }} (#{{ scene.id }})</h1>
+    
+	<h2>Medias : </h2>
+    <ul class="medias">
+    	{% for child in scene.medias %}
+            <li>{{ child.content }}</li>
+        {% endfor %}
+    </ul>
+	
+	
+
+    <h2>Connexions : </h2>
+    <ul>
+
+    	{% for child in labelConnections %}
+	    	<li>
+	    	<a href="{{ path("previewProject", {'sceneId': child.childScene.id}) }}">
+	    		{{ child.label }} (vers la scène #{{ child.childScene.id }})
+	    	</a>
+             </li>
+         {% endfor %}
+		
+		{% if patternConnections %}
+			<li><form action="{{ path("previewProject", {'sceneId': scene.id}) }}">
+				<input type="text" name="patternInput"/>
+				<input type="submit" />
+			</form></li>
+		{% endif %}
+	
+
+    </ul>
+
+   
+	{% if patternConnections %}
+	
+	<h2>Patterns disponibles :</h2>
+    
+    <ul class="patterns">
+    	{% for child in patternConnections %}
+	    	<li>{{ child.pattern }} (vers la scène #{{ child.childScene.id }})</li>
+         {% endfor %}
+    </ul>
+
+	{% endif %}
+
+
 
 {% endblock %}

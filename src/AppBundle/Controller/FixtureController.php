@@ -66,8 +66,10 @@ class FixtureController extends Controller
         $projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
         $project = $projectRepo->find(1);
 
-        $this->addFlash("warning", "Fixtures : Aborted (non-empty db)");
-        return $this->redirectToRoute('homepage');
+        if ($project!=null) {
+            $this->addFlash("warning", "Fixtures : Aborted (non-empty db)");
+            return $this->redirectToRoute('homepage');
+        }
  
         $project = new Project();
         $project->setTitle("Projet démo");
