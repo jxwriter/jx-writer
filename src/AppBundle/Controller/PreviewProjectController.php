@@ -24,18 +24,9 @@ class PreviewProjectController extends Controller
         $project = $scene->getProject();
 
         if ($request->query->has('patternInput')) {
-            $pattern = $request->query->get('patternInput');
-            $connection = $this->patternConnection($scene, $pattern);
-
-            if ($connection) {
-                $this->addFlash("notice", "Found valid pattern : " . $pattern);
-                return $this->redirectToRoute('previewProject', array('sceneId'=> $connection->getChildScene()->getId()));
-            } else {
-                $this->addFlash("warning", "invalid pattern : " . $pattern);
-            }
-
+            return $this->handlePatternInput($request, $scene);
         }
-
+      
         //$connections = $scene->getConnections();
 
         $labelConnections = $this->getLabelConnections($scene);
@@ -50,6 +41,20 @@ class PreviewProjectController extends Controller
             ));
     }
 
+    protected function handlePatternInput($request, $scene){
+    
+        $pattern = $request->query->get('patternInput');
+        $connection = $this->patternConnection($scene, $pattern);
+
+        if ($connection) {
+            $this->addFlash("notice", "Found valid pattern : " . $pattern);
+            return $this->redirectToRoute('previewProject', array('sceneId'=> $connection->getChildScene()->getId()));
+        } else {
+            $this->addFlash("warning", "invalid pattern : " . $pattern);
+        }
+
+        
+    }
 
     protected function getLabelConnections($scene){
         $connectionRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\SceneConnection');
@@ -88,6 +93,8 @@ class PreviewProjectController extends Controller
             ->andWhere($builder->expr()->eq('c.pattern', ':input'))
             ->setParameter('input', $pattern)
             ->setParameter('parentScene', $scene)
+            ->orderBy('c.position', 'DESC')
+            ->setMaxResults(1)
             ->getQuery();
 
         $connections = $query->getResult();

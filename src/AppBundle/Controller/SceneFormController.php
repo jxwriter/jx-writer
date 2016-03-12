@@ -36,8 +36,10 @@ class SceneFormController extends Controller
 		));
 
 		$formSceneBuilder
-			->add('title', TextType::class)
+			->add('conditions', TextType::class, array('required' => false))
+            ->add('title', TextType::class)
             ->add('text', TextType::class)
+            ->add('text_conditions', TextType::class, array('required' => false))
             ->add('save', SubmitType::class, array('label' => 'Create Scene'));
 
         $form = $formSceneBuilder->getForm();
@@ -48,9 +50,14 @@ class SceneFormController extends Controller
             $project = $form["project"]->getData();
             $title = $form["title"]->getData();
             $text = $form["text"]->getData();
+            $conditions = $form["conditions"]->getData();
+            $text_conditions = $form["text_conditions"]->getData();
 
             $scene = $entityFactory->makeScene($title, $project);
-            $entityFactory->makeMediaText($text, $scene);
+            $scene->setConditions($conditions);
+
+            $media = $entityFactory->makeMediaText($text, $scene);
+            $media->setConditions($text_conditions);
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();

@@ -25,7 +25,7 @@ class ConnectionFormController extends Controller
     public function indexAction(Request $request)
     {
         $entityFactory = $this->get('entity_factory');
-        
+
         $formSceneBuilder = $this->createFormBuilder();
 
 		$formSceneBuilder->add('project', EntityType::class, array(
@@ -53,6 +53,7 @@ class ConnectionFormController extends Controller
 			->add('label', TextType::class, array('required' => false))
             ->add('pattern', TextType::class, array('required' => false))
             ->add('position', NumberType::class, array('data' => 0))
+            ->add('conditions', TextType::class, array('required' => false))
             ->add('save', SubmitType::class, array('label' => 'Create Connection'));
 
         $form = $formSceneBuilder->getForm();
@@ -63,12 +64,16 @@ class ConnectionFormController extends Controller
             $project = $form["project"]->getData();
             $label = $form["label"]->getData();
             $pattern = $form["pattern"]->getData();
+            $position = $form["position"]->getData();
+            $conditions = $form["conditions"]->getData();
 
             $parentScene = $form["parentScene"]->getData();
             $childScene = $form["childScene"]->getData();
 
-            $entityFactory->makeConnection($parentScene, $childScene, $label, $pattern);
-            
+            $connection = $entityFactory->makeConnection($parentScene, $childScene, $label, $pattern);
+            $connection->setConditions($conditions);
+            $connection->setPosition($position);
+
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 

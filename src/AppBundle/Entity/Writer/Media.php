@@ -152,4 +152,28 @@ class Media
     {
         return $this->scene;
     }
+
+    /**
+     * Set position
+     *
+     * @param integer $position
+     *
+     * @return Media
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position
+     *
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
 }
