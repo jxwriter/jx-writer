@@ -6,7 +6,11 @@
 
 {% block body %}
     <h1>{{ project.title }} / {{ scene.title }} (#{{ scene.id }})</h1>
-    
+
+  	<p>
+		<a href="{{ path("apiGetScene", {'sceneId': scene.id}) }}">(Voir le JSON)</a>
+	</p>
+
 	<h2>Medias : </h2>
     <ul class="medias">
     	{% for child in scene.medias %}
@@ -49,6 +53,8 @@
     </ul>
 
 	{% endif %}
+
+	
 
 
 
