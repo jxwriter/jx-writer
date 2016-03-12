@@ -58,7 +58,6 @@ class PreviewProjectController extends Controller
         $query = $builder
             ->where('c.parentScene = :parentScene')
             ->andWhere($builder->expr()->neq('c.label', ':empty'))
-            ->andWhere($builder->expr()->eq('c.pattern', ':empty'))
             ->setParameter('empty', '')
             ->setParameter('parentScene', $scene)
             ->getQuery();
@@ -72,7 +71,6 @@ class PreviewProjectController extends Controller
         $builder = $connectionRepo->createQueryBuilder('c');
         $query = $builder
             ->where('c.parentScene = :parentScene')
-            ->andWhere($builder->expr()->eq('c.label', ':empty'))
             ->andWhere($builder->expr()->neq('c.pattern', ':empty'))
             ->setParameter('empty', '')
             ->setParameter('parentScene', $scene)

@@ -16,10 +16,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class SceneFormController extends Controller
+class ConnectionFormController extends Controller
 {
     /**
-     * @Route("/scene/form", name="sceneForm")
+     * @Route("/connection/form", name="connectionForm")
      */
     public function indexAction(Request $request)
     {
@@ -33,10 +33,24 @@ class SceneFormController extends Controller
 		    }
 		));
 
+        $formSceneBuilder->add('parentScene', EntityType::class, array(
+            'class' => 'AppBundle:Writer\Scene',
+            'choice_label' => function ($project) {
+                return $project->getTitle();
+            }
+        ));
+
+        $formSceneBuilder->add('childScene', EntityType::class, array(
+            'class' => 'AppBundle:Writer\Scene',
+            'choice_label' => function ($project) {
+                return $project->getTitle();
+            }
+        ));
+
 		$formSceneBuilder
-			->add('title', TextType::class)
-            ->add('text', TextType::class)
-            ->add('save', SubmitType::class, array('label' => 'Create Scene'));
+			->add('label', TextType::class, array('required' => false))
+            ->add('pattern', TextType::class, array('required' => false))
+            ->add('save', SubmitType::class, array('label' => 'Create Connection'));
 
         $form = $formSceneBuilder->getForm();
 
@@ -44,21 +58,23 @@ class SceneFormController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $project = $form["project"]->getData();
-            $title = $form["title"]->getData();
-            $text = $form["text"]->getData();
+            $label = $form["label"]->getData();
+            $pattern = $form["pattern"]->getData();
 
-            $scene = $this->makeScene($title, $project);
-            $this->makeMediaText($text, $scene);
+            $parentScene = $form["parentScene"]->getData();
+            $childScene = $form["childScene"]->getData();
 
+            $this->makeConnection($parentScene, $childScene, $label, $pattern);
+            
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $this->addFlash("notice", "Saved scene : " . $scene->getId());
-            return $this->redirectToRoute('previewProject', array('sceneId'=> $scene->getId()));
+            $this->addFlash("notice", "Saved connection : " . $parentScene->getId());
+            return $this->redirectToRoute('previewProject', array('sceneId'=> $parentScene->getId()));
         }
 
-        return $this->render('writer/sceneForm.html.twig', array(
-            'formScene' => $form->createView()
+        return $this->render('writer/connectionForm.html.twig', array(
+            'formConnection' => $form->createView()
         ));
     }
 
