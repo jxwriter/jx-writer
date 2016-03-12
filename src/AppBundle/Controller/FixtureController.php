@@ -14,55 +14,13 @@ use AppBundle\Entity\Writer\Product;
 
 class FixtureController extends Controller
 {
-    
-    protected function makeMediaText($content, $inScene=null) {
-        $media = new Media();
-        $media->setFormat("text");
-        $media->setContent($content);
-
-        if ($inScene) {
-            $media->setScene($inScene);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($media);
-
-        return $media;
-    }
-
-    protected function makeConnection($scene1, $scene2, $label="", $pattern=""){
-        $connection = new SceneConnection();
-        $connection->setParentScene($scene1);
-        $connection->setChildScene($scene2);
-
-        $connection->setLabel($label);
-        $connection->setPattern($pattern);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($connection);
-
-        return $connection;
-    }
-
-    protected function makeScene($title, $project){
-        $scene = new Scene();
-        $scene->setTitle($title);
-        $scene->setProject($project);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($scene);
-
-        return $scene;
-    }
-
     /**
      * @Route("/init", name="fixture")
      */
     public function indexAction(Request $request)
     {
+        $entityFactory = $this->get('entity_factory');
         
-        $em = $this->getDoctrine()->getManager();
-
         $projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
         $project = $projectRepo->find(1);
 
@@ -76,32 +34,33 @@ class FixtureController extends Controller
 
         $em->persist($project);
 
-        $welcome = $this->makeScene("Welcome", $project);
-        $bureau = $this->makeScene("Bureau", $project);
-        $salon = $this->makeScene("Salon", $project);
-        $secret = $this->makeScene("Secret", $project);
-        $fin = $this->makeScene("Fin", $project);
-        $finHappy = $this->makeScene("Fin !", $project);
+        $welcome = $entityFactory->makeScene("Welcome", $project);
+        $bureau = $entityFactory->makeScene("Bureau", $project);
+        $salon = $entityFactory->makeScene("Salon", $project);
+        $secret = $entityFactory->makeScene("Secret", $project);
+        $fin = $entityFactory->makeScene("Fin", $project);
+        $finHappy = $entityFactory->makeScene("Fin !", $project);
 
-        $this->makeMediaText("Bienvenue dans la maison démo !", $welcome);
-        $this->makeMediaText("Vous arrivez dans le bureau", $bureau);
-        $this->makeMediaText("Vous arrivez dans le salon, il est vide.", $salon);
-        $this->makeMediaText("En fouillant, vous trouvez ce que vous cherchez.", $secret);
-        $this->makeMediaText("Vous quitter la maison démo.", $fin);
-        $this->makeMediaText("Vous quitter la maison démo, heureux.", $finHappy);
+        $entityFactory->makeMediaText("Bienvenue dans la maison démo !", $welcome);
+        $entityFactory->makeMediaText("Vous arrivez dans le bureau", $bureau);
+        $entityFactory->makeMediaText("Vous arrivez dans le salon, il est vide.", $salon);
+        $entityFactory->makeMediaText("En fouillant, vous trouvez ce que vous cherchez.", $secret);
+        $entityFactory->makeMediaText("Vous quitter la maison démo.", $fin);
+        $entityFactory->makeMediaText("Vous quitter la maison démo, heureux.", $finHappy);
 
-        $this->makeConnection($welcome, $bureau, "Aller dans le bureau");
-        $this->makeConnection($welcome, $salon, "Aller dans le salon");
+        $entityFactory->makeConnection($welcome, $bureau, "Aller dans le bureau");
+        $entityFactory->makeConnection($welcome, $salon, "Aller dans le salon");
 
-        $this->makeConnection($bureau, $secret, "", "FOUILLER");
-        $this->makeConnection($bureau, $salon, "Vers le salon");
-        $this->makeConnection($bureau, $fin, "Quitter la maison démo");
+        $entityFactory->makeConnection($bureau, $secret, "", "FOUILLER");
+        $entityFactory->makeConnection($bureau, $salon, "Vers le salon");
+        $entityFactory->makeConnection($bureau, $fin, "Quitter la maison démo");
 
-        $this->makeConnection($salon, $bureau, "Vers le bureau");
-        $this->makeConnection($salon, $fin, "Quitter la maison démo");
+        $entityFactory->makeConnection($salon, $bureau, "Vers le bureau");
+        $entityFactory->makeConnection($salon, $fin, "Quitter la maison démo");
 
-        $this->makeConnection($secret, $finHappy, "Quitter la maison démo");
+        $entityFactory->makeConnection($secret, $finHappy, "Quitter la maison démo");
         
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
 
         $this->addFlash("notice", "Fixtures : OK.");

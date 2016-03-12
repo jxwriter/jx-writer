@@ -15,14 +15,15 @@ class ApiGetSceneController extends Controller
      */
     public function indexAction(Request $request, $sceneId)
     {
-    	$sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+
+        $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         
         $scene = $sceneRepo->find($sceneId);
         $project = $scene->getProject();
 
         $result = array(
         	"id" => $scene->getId(),
-        	"title" => $scene->getId(),
+        	"title" => $scene->getTitle(),
         	"actions" => $scene->getActions(),
         	"conditions" => $scene->getConditions(),
         	"medias" => array(),

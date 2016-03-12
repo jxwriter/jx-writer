@@ -8,6 +8,7 @@ use AppBundle\Entity\Writer\SceneConnection;
 use AppBundle\Entity\Writer\Product;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,7 +24,8 @@ class ConnectionFormController extends Controller
      */
     public function indexAction(Request $request)
     {
-
+        $entityFactory = $this->get('entity_factory');
+        
         $formSceneBuilder = $this->createFormBuilder();
 
 		$formSceneBuilder->add('project', EntityType::class, array(
@@ -50,6 +52,7 @@ class ConnectionFormController extends Controller
 		$formSceneBuilder
 			->add('label', TextType::class, array('required' => false))
             ->add('pattern', TextType::class, array('required' => false))
+            ->add('position', NumberType::class, array('data' => 0))
             ->add('save', SubmitType::class, array('label' => 'Create Connection'));
 
         $form = $formSceneBuilder->getForm();
@@ -64,7 +67,7 @@ class ConnectionFormController extends Controller
             $parentScene = $form["parentScene"]->getData();
             $childScene = $form["childScene"]->getData();
 
-            $this->makeConnection($parentScene, $childScene, $label, $pattern);
+            $entityFactory->makeConnection($parentScene, $childScene, $label, $pattern);
             
             $em = $this->getDoctrine()->getManager();
             $em->flush();
@@ -76,45 +79,5 @@ class ConnectionFormController extends Controller
         return $this->render('writer/connectionForm.html.twig', array(
             'formConnection' => $form->createView()
         ));
-    }
-
-    protected function makeMediaText($content, $inScene=null) {
-        $media = new Media();
-        $media->setFormat("text");
-        $media->setContent($content);
-
-        if ($inScene) {
-            $media->setScene($inScene);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($media);
-
-        return $media;
-    }
-
-    protected function makeConnection($scene1, $scene2, $label="", $pattern=""){
-        $connection = new SceneConnection();
-        $connection->setParentScene($scene1);
-        $connection->setChildScene($scene2);
-
-        $connection->setLabel($label);
-        $connection->setPattern($pattern);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($connection);
-
-        return $connection;
-    }
-
-    protected function makeScene($title, $project){
-        $scene = new Scene();
-        $scene->setTitle($title);
-        $scene->setProject($project);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($scene);
-
-        return $scene;
     }
 }

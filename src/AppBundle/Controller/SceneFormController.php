@@ -24,6 +24,8 @@ class SceneFormController extends Controller
     public function indexAction(Request $request)
     {
 
+        $entityFactory = $this->get('entity_factory');
+
         $formSceneBuilder = $this->createFormBuilder();
 
 		$formSceneBuilder->add('project', EntityType::class, array(
@@ -47,8 +49,8 @@ class SceneFormController extends Controller
             $title = $form["title"]->getData();
             $text = $form["text"]->getData();
 
-            $scene = $this->makeScene($title, $project);
-            $this->makeMediaText($text, $scene);
+            $scene = $entityFactory->makeScene($title, $project);
+            $entityFactory->makeMediaText($text, $scene);
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
@@ -62,43 +64,4 @@ class SceneFormController extends Controller
         ));
     }
 
-    protected function makeMediaText($content, $inScene=null) {
-        $media = new Media();
-        $media->setFormat("text");
-        $media->setContent($content);
-
-        if ($inScene) {
-            $media->setScene($inScene);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($media);
-
-        return $media;
-    }
-
-    protected function makeConnection($scene1, $scene2, $label="", $pattern=""){
-        $connection = new SceneConnection();
-        $connection->setParentScene($scene1);
-        $connection->setChildScene($scene2);
-
-        $connection->setLabel($label);
-        $connection->setPattern($pattern);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($connection);
-
-        return $connection;
-    }
-
-    protected function makeScene($title, $project){
-        $scene = new Scene();
-        $scene->setTitle($title);
-        $scene->setProject($project);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($scene);
-
-        return $scene;
-    }
 }

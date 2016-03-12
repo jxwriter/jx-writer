@@ -43,6 +43,11 @@ class Media
     private $scene;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $position = 0;
+
+    /**
      * Get id
      *
      * @return int
