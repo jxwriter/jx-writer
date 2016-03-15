@@ -4,61 +4,66 @@
 
 {% block bodyClass %}previewProject{% endblock %}
 
-{% block body %}
-    <h1>{{ project.title }} / {{ scene.title }} (#{{ scene.id }})</h1>
+{% block javascripts %}
+	<script>
+	var jxServer = new JX.Server();
+	jxServer.variables.init("test", 0);
+	jxServer.variables.init("bab", 0);
+	
+	var handleScene = function(jsonData){
+		console.log(jsonData);
+		
+		var titleElement = document.getElementById("mainTitle");
+		var mediaElement = document.getElementById("medias");
+		var connectionElement = document.getElementById("connections");
+		
+		//reset
+		titleElement.innerHTML = "";
+		mediaElement.innerHTML = "";
+		connectionElement.innerHTML = "";
 
-  	<p>
+		titleElement.innerHTML = "Scène : " + jsonData.title + "(" + jsonData.project.title + ")";
+		
+		jsonData.medias.forEach(function(item){
+			mediaElement.innerHTML += "<p>"+ item.content +"</p>";
+		});
+
+		jsonData.connections.forEach(function(item){
+			if (! item.label) {
+				return;
+			}
+			
+			var newConnectionElement = document.createElement("li");
+			newConnectionElement.innerHTML = item.label;
+
+			newConnectionElement.addEventListener("click", function(){
+				jxServer.requestScene(item.childSceneId, handleScene);
+			});
+
+			connectionElement.appendChild(newConnectionElement);
+		});
+
+	}
+
+	jxServer.requestScene(1, handleScene);
+
+	</script>
+{% endblock %}
+
+{% block body %}
+
+	<h1 id="mainTitle"></h1>
+	<div id="medias">
+		
+	</div>
+
+	<ul id="connections">
+		
+	</ul>
+
+	<p>
 		<a href="{{ path("apiGetScene", {'sceneId': scene.id}) }}">(Voir le JSON)</a>
 	</p>
-
-	<h2>Medias : </h2>
-    <ul class="medias">
-    	{% for child in scene.medias %}
-            <li>{{ child.content }}</li>
-        {% endfor %}
-    </ul>
-	
-	
-
-    <h2>Connexions : </h2>
-    <ul>
-
-    	{% for child in labelConnections %}
-	    	<li>
-	    	<a href="{{ path("previewProject", {'sceneId': child.childScene.id}) }}">
-	    		{{ child.label }} (vers la scène #{{ child.childScene.id }})
-	    	</a>
-             </li>
-         {% endfor %}
-		
-		{% if patternConnections %}
-			<li><form action="{{ path("previewProject", {'sceneId': scene.id}) }}">
-				<input type="text" name="patternInput"/>
-				<input type="submit" />
-			</form></li>
-		{% endif %}
-	
-
-    </ul>
-
-   
-	{% if patternConnections %}
-	
-	<h2>Patterns disponibles :</h2>
-    
-    <ul class="patterns">
-    	{% for child in patternConnections %}
-	    	<li>{{ child.pattern }} (vers la scène #{{ child.childScene.id }})</li>
-         {% endfor %}
-    </ul>
-
-	{% endif %}
-
-	
-	<p><a href="{{ path("connectionForm", {'sceneId': scene.id}) }}">Ajouter une connexion</a></p>
-	
-	
-
 
 
 {% endblock %}

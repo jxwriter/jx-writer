@@ -25,7 +25,7 @@ class ApiGetSceneController extends Controller
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         
         $scene = $sceneRepo->find($sceneId);
-        $project = $scene->getProject();
+        
         
         $result = array();
         
@@ -77,6 +77,10 @@ class ApiGetSceneController extends Controller
             $match = array();
             $res = preg_match($pattern, $action, $match);
 
+            if (!$res || count($match) != 4) {
+                continue;
+            }
+
             $variable = $match[1];
             $sign = $match[2];
             $value = $match[3];
@@ -97,10 +101,15 @@ class ApiGetSceneController extends Controller
 
         $result["id"] = $scene->getId();
         $result["title"] = $scene->getTitle();
-        $result["actions"] = $scene->getActions();
+        $result["project"] = array(
+            "id" => $scene->getProject()->getId(),
+            "title" => $scene->getProject()->getTitle(),
+        );
         $result["conditions"] = $scene->getConditions();
         $result["medias"] = array();
         $result["connections"] = array();
+        $result["actions"] = $scene->getActions();
+        
     }
 
     protected function processMedias($scene, &$result){
