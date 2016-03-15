@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Super
+{% block title %}Choix du projet
 {% endblock %}
 
 
 {% block body %}
-    <p>Choix du projet : (TBD)</p>
-    
+    <h1>Choix du projet : </h1>
+    <ul>
+    	
+	{% for project in projects %}
+        <li><a href="{{ path("homepage", { "projectId" : project.id }) }}">{{ project.title }}</a></li>
+    {% endfor %}
 
+    </ul>
 
-    <!--a href="{{ path("fixture") }}">Init fixtures</a-->
-
+ 
 {% endblock %}
