@@ -20,7 +20,7 @@ class ApiGetSceneController extends Controller
     public function indexAction(Request $request, $sceneId)
     {
         $this->variableChecker = $this->get('variable_checker');
-        $this->variables = $this->extractProjectVariables($request);
+        $this->variables = $this->extractRequestVariables($request);
 
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         
@@ -28,22 +28,30 @@ class ApiGetSceneController extends Controller
         $project = $scene->getProject();
         
         $result = array();
-        $result["debug"] = array();
-        $result["debug"][] = "Notice: received variables: " . implode(",", array_keys($this->variables));
         
         try {
+            $receivedVariableString = implode(",", array_keys($this->variables));
+            $result['debug'][] = "Notice: received variables: " . $receivedVariableString;
+        
             $this->processScene($scene, $result);
             $this->processMedias($scene, $result);
             $this->processConnections($scene, $result);
+            $this->processActions($scene, $result);
+
         } catch (Exception $e) {
-            $result["debug"][] = $e;
+            $result['debug'][] = $e;
+        }
+        
+        $result['debug'][] = "Done.";
+
+        if ($request->query->get("_debug") != 1) {
+            unset($result['debug']);
         }
 
-        $result["debug"][] = "Done.";
         return new JSONResponse($result);
     }
 
-    protected function extractProjectVariables($request) {
+    protected function extractRequestVariables($request) {
 
         $variables = array();
         $parameters = $request->query->all();
@@ -57,6 +65,26 @@ class ApiGetSceneController extends Controller
         }
 
         return $variables;
+    }
+
+    protected function extractActions($actionString) {
+
+        $actions = explode(";", $actionString);
+        $extract = array();
+
+        foreach ($actions as $action) {
+            $pattern = "/(\w+)([\+\-])(\w+)/";
+            $match = array();
+            $res = preg_match($pattern, $action, $match);
+
+            $variable = $match[1];
+            $sign = $match[2];
+            $value = $match[3];
+
+            $extract[$variable] = $value * ($sign."1");
+        }
+
+        return $extract;
     }
 
     protected function processScene($scene, &$result){
@@ -125,7 +153,9 @@ class ApiGetSceneController extends Controller
     }
 
     protected function processActions($scene, &$result){
-        
+
+        $actions = $this->extractActions($scene->getActions());
+        $result["actions"] = $actions;
     }
 
    
