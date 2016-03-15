@@ -10,13 +10,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiGetSceneController extends Controller
 {
+   
+    protected $variableChecker;
+    protected $variables;
+
     /**
      * @Route("/api/scene/{sceneId}", name="apiGetScene")
      */
     public function indexAction(Request $request, $sceneId)
     {
-        $variableChecker = $this->get('variable_checker');
-        $variables = $this->extractProjectVariables($request);
+        $this->variableChecker = $this->get('variable_checker');
+        $this->variables = $this->extractProjectVariables($request);
 
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         
@@ -25,73 +29,23 @@ class ApiGetSceneController extends Controller
         
         $result = array();
         $result["debug"] = array();
-
-        $result["debug"][] = "Notice: received variables: " . implode(",", array_keys($variables));
+        $result["debug"][] = "Notice: received variables: " . implode(",", array_keys($this->variables));
         
-        $result["debug"][] = "Checking Scene";
-        $res = $variableChecker->check($variables, $scene->getConditions(), $result["debug"]);
-
-        
-        if (! $res) {
-            return new JSONResponse($result);
-        }
-
-        $result["id"] = $scene->getId();
-        $result["title"] = $scene->getTitle();
-        $result["actions"] = $scene->getActions();
-        $result["conditions"] = $scene->getConditions();
-        $result["medias"] = array();
-        $result["connections"] = array();
-        
-        $medias = $scene->getMedias();
-
-        foreach ($medias as $media) {
-            $result["debug"][] = "Checking Media";
-            $res = $variableChecker->check($variables, $media->getConditions(), $result["debug"]);
-
-            if (! $res) {
-                continue;
-            }
-
-        	$m = array(
-        		"format" => $media->getFormat(),
-        		"content" => $media->getContent(),
-        		"conditions" => $media->getConditions(),
-        	);
-
-        	$result["medias"][] = $m;
-        }
-
-        $connections = $scene->getConnections();
-
-        foreach ($connections as $connection) {
-            $result["debug"][] = "Checking Connection + target scene";
-            $resConnection = $variableChecker->check($variables, $connection->getConditions(), $result["debug"]);
-            $resTarget = $variableChecker->check($variables, $connection->getChildScene()->getConditions(), $result["debug"]);
-
-            if (! $resConnection || ! $resTarget) {
-                continue;
-            }
-
-        	$c = array(
-        		"label" => $connection->getLabel(),
-        		"pattern" => $connection->getPattern(),
-        		"conditions" => $connection->getConditions(),
-        		"childSceneId" => $connection->getChildScene()->getId(),
-        	);
-
-        	$result["connections"][] = $c;
+        try {
+            $this->processScene($scene, $result);
+            $this->processMedias($scene, $result);
+            $this->processConnections($scene, $result);
+        } catch (Exception $e) {
+            $result["debug"][] = $e;
         }
 
         $result["debug"][] = "Done.";
         return new JSONResponse($result);
     }
 
-
     protected function extractProjectVariables($request) {
 
         $variables = array();
-
         $parameters = $request->query->all();
         
         foreach ($parameters as $key => $value) {
@@ -103,6 +57,75 @@ class ApiGetSceneController extends Controller
         }
 
         return $variables;
+    }
+
+    protected function processScene($scene, &$result){
+        $result["debug"][] = "Checking Scene";
+        $res = $this->variableChecker->check($this->variables, $scene->getConditions(), $result["debug"]);
+
+        if (! $res) {
+            throw new Exception("Forbidden scene");
+        }
+
+        $result["id"] = $scene->getId();
+        $result["title"] = $scene->getTitle();
+        $result["actions"] = $scene->getActions();
+        $result["conditions"] = $scene->getConditions();
+        $result["medias"] = array();
+        $result["connections"] = array();
+    }
+
+    protected function processMedias($scene, &$result){
+        $medias = $scene->getMedias();
+
+        foreach ($medias as $media) {
+            $result["debug"][] = "Checking Media";
+            
+            $res = $this->variableChecker->check(
+                $this->variables, 
+                $media->getConditions(), 
+                $result["debug"]
+            );
+
+            if (! $res) {
+                continue;
+            }
+
+            $m = array(
+                "format" => $media->getFormat(),
+                "content" => $media->getContent(),
+                "conditions" => $media->getConditions(),
+            );
+
+            $result["medias"][] = $m;
+        }
+    }
+
+    protected function processConnections($scene, &$result){
+        $connections = $scene->getConnections();
+
+        foreach ($connections as $connection) {
+            $result["debug"][] = "Checking Connection + target scene";
+            $resConnection = $this->variableChecker->check($this->variables, $connection->getConditions(), $result["debug"]);
+            $resTarget = $this->variableChecker->check($this->variables, $connection->getChildScene()->getConditions(), $result["debug"]);
+
+            if (! $resConnection || ! $resTarget) {
+                continue;
+            }
+
+            $c = array(
+                "label" => $connection->getLabel(),
+                "pattern" => $connection->getPattern(),
+                "conditions" => $connection->getConditions(),
+                "childSceneId" => $connection->getChildScene()->getId(),
+            );
+
+            $result["connections"][] = $c;
+        }
+    }
+
+    protected function processActions($scene, &$result){
+        
     }
 
    
