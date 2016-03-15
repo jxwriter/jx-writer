@@ -20,9 +20,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ConnectionFormController extends Controller
 {
     /**
-     * @Route("/connection/form", name="connectionForm")
+     * @Route("/connection/form/{parentSceneId}", name="connectionForm", defaults={"parentSceneId" = 0})
      */
-    public function indexAction(Request $request)
+
+
+    public function indexAction(Request $request, $parentSceneId)
     {
         $entityFactory = $this->get('entity_factory');
 
@@ -31,21 +33,21 @@ class ConnectionFormController extends Controller
 		$formSceneBuilder->add('project', EntityType::class, array(
     		'class' => 'AppBundle:Writer\Project',
     		'choice_label' => function ($project) {
-		        return $project->getTitle();
+		        return $project->getId() . " - " . $project->getTitle();
 		    }
 		));
 
         $formSceneBuilder->add('parentScene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
-            'choice_label' => function ($project) {
-                return $project->getTitle();
-            }
+            'choice_label' => function ($scene) {
+                return $scene->getId() . " - " . $scene->getTitle();
+            },
         ));
 
         $formSceneBuilder->add('childScene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
-            'choice_label' => function ($project) {
-                return $project->getTitle();
+            'choice_label' => function ($scene) {
+                return $scene->getId() . " - " . $scene->getTitle();
             }
         ));
 
