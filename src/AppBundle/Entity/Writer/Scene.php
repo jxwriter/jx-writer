@@ -52,6 +52,11 @@ class Scene
      */
     private $connections;
 
+    /**
+     * @ORM\Column(name="data", type="string", length=255)
+     */
+    private $data;
+
 
     public function __construct()
     {
@@ -232,5 +237,29 @@ class Scene
     public function getConnections()
     {
         return $this->connections;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Scene
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }
