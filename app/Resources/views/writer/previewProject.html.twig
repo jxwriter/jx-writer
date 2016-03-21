@@ -45,7 +45,17 @@
 
 	}
 
-	jxServer.requestScene(1, handleScene);
+	var sceneId=1;
+
+	var pattern = new RegExp(/project\/preview\/([0-9]+)/); //cherche le "nombre" apres "project/preview/" dans l'URL.
+	var extracted = pattern.exec(window.location.href);
+	console.log(extracted);
+	
+	if (extracted[1]) {
+		sceneId = extracted[1];
+	}
+
+	jxServer.requestScene(sceneId, handleScene);
 
 	</script>
 {% endblock %}

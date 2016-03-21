@@ -5,13 +5,20 @@
 
 
 {% block body %}
-    <h1>Choix du projet : </h1>
+    <h1>Choix du projet (TODO :)) : </h1>
     <ul>
     	
 	{% for project in projects %}
         <li><a href="{{ path("homepage", { "projectId" : project.id }) }}">{{ project.title }}</a></li>
     {% endfor %}
 
+    </ul>
+
+    <h2>Menu</h2>
+    <ul>
+    	<li><a href="{{ path("previewProject", { "sceneId" : 1 }) }}">Preview de la scene 1</a></li>
+    	<li><a href="{{ path("sceneForm") }}">Ajouter une scène</a></li>
+    	<li><a href="{{ path("connectionForm", { "parentSceneId" : 1 }) }}">Ajouter une connexion</a></li>
     </ul>
 
  
