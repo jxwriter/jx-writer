@@ -2,7 +2,7 @@ var JX = {};
 
 JX.Server = function(){
 
-	this.baseUrl = "http://jxwriter.local/app_dev.php/";
+	this.baseUrl = "http://jx.tlabmars.org/sandbox/prototypes/jx-writer/web/api/scene/";
 
 	this.variables = new JX.Vars();
 	this.requestScene = function(sceneId, callbackSuccess, callbackError){
@@ -16,8 +16,8 @@ JX.Server = function(){
 
 		var request = new XMLHttpRequest();
 		var params = "?" + this.variables.toString();
-		var url = this.baseUrl + "api/scene/" + sceneId + params;
-		
+		var url = this.baseUrl + sceneId + params;
+
 		request.open('GET', url, true);
 		request.onload = function(e){
 			var json;

@@ -48,7 +48,9 @@ class ApiGetSceneController extends Controller
             unset($result['debug']);
         }
 
-        return new JSONResponse($result);
+        $response = new JSONResponse($result);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
     }
 
     protected function extractRequestVariables($request) {
