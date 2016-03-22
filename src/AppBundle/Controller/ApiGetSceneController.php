@@ -134,6 +134,7 @@ class ApiGetSceneController extends Controller
                 "format" => $media->getFormat(),
                 "content" => $media->getContent(),
                 "conditions" => $media->getConditions(),
+                "position" => $media->getPosition(),
             );
 
             $result["medias"][] = $m;
@@ -157,6 +158,7 @@ class ApiGetSceneController extends Controller
                 "pattern" => $connection->getPattern(),
                 "conditions" => $connection->getConditions(),
                 "childSceneId" => $connection->getChildScene()->getId(),
+                "position" => $connection->getPosition(),
             );
 
             $result["connections"][] = $c;

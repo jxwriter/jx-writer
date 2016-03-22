@@ -44,11 +44,13 @@ class Scene
 
     /**
      * @ORM\OneToMany(targetEntity="Media", mappedBy="scene")
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     private $medias;
 
     /**
      * @ORM\OneToMany(targetEntity="SceneConnection", mappedBy="parentScene")
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     private $connections;
 
