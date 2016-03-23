@@ -1,16 +1,23 @@
 var JX = {};
 
+JX.log = function(message, object){
+	console.log("[JX] " + message);
+	if (object) console.log(object);
+};
+
 JX.Server = function(){
 
+	//prod conf
 	this.baseUrl = "http://jx.tlabmars.org/sandbox/prototypes/jx-writer/web/";
-	this.baseUrl = "http://jxwriter.local/app_dev.php/";
+
+	//personnal dev conf
+	if (window.location.href.indexOf("jxwriter.local") != -1){
+		this.baseUrl = "http://jxwriter.local/app_dev.php/";
+	}
 
 	this.variables = new JX.Vars();
 	this.variables.init("_jx", 1);
 
-	this.log = function(message){
-		console.log("[JX] " + message);
-	}
 
 	//Request scene details.
 	this.requestScene = function(sceneId, callbackSuccess, callbackError){
@@ -33,13 +40,14 @@ JX.Server = function(){
 		};
 	}
 	
+	//Common JSON request
 	this.makeJsonRequest = function(targetUrl, callbackSuccess, callbackError, additionnalParameters){
 		
 		var params = "?" + this.variables.toString();
 		var additionnalParams = additionnalParameters ? "&" + additionnalParameters.toString() : "";
 
 		var url = this.baseUrl + targetUrl + params + additionnalParams;
-		this.log("Sending : " + url);
+		JX.log("Sending : " + url);
 
 		if (!callbackError) {
 			callbackError=this.makeDefaultCallbackError();
@@ -96,8 +104,7 @@ JX.Vars = function(){
 			this.add(variable, actions[variable]);
 		}
 
-		console.log("[jx] updated variables : ");
-		console.log(this.variables);
+		JX.log("updated variables : ", this.variables);
 	}
 
 	this.add = function(name, value) {
@@ -106,6 +113,10 @@ JX.Vars = function(){
 		}
 
 		this.variables[name] += value;
+	}
+
+	this.get = function(name) {
+		return this.variables[name];
 	}
 
 	this.toString = function(){

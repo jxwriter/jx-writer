@@ -55,9 +55,14 @@ class Scene
     private $connections;
 
     /**
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description = "";
+
+    /**
      * @ORM\Column(name="data", type="string", length=255)
      */
-    private $data;
+    private $data = "";
 
 
     public function __construct()
@@ -263,5 +268,29 @@ class Scene
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Scene
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

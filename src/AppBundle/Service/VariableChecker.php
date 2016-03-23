@@ -13,7 +13,6 @@ class VariableChecker
 
     public function check($variables, $conditionString, &$logs=array()){
         $checks = $this->splitVariableString($conditionString, $logs);
-        
         $success = true;
 
         foreach ($checks as $check) {
@@ -44,12 +43,13 @@ class VariableChecker
         $checks = array();
         
         foreach ($conditions as $oneConditionString) {
+        
             if (empty(trim($oneConditionString))) {
                 continue;
             }
 
             $check = $this->makeVariableCheck($oneConditionString);
-            
+        
             if (! $check) {
                 continue;
             }
@@ -62,10 +62,10 @@ class VariableChecker
 
     public function makeVariableCheck($oneConditionString){
         
-        $pattern = "/\s*(\w+)\s*([\=\<\>\!]+)\s*(\-?\w+[\.\w]+)\s*/";
+        $pattern = "/\s*(\w+)\s*([\=\<\>\!]+)\s*(\-?\w+[\.\w]*)\s*/";
         $match = array();
         $res = preg_match($pattern, $oneConditionString, $match);
-
+        
         if (!$res || count($match) != 4)  {
             return false;
         }

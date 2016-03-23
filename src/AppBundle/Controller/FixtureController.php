@@ -20,6 +20,7 @@ class FixtureController extends Controller
     public function indexAction(Request $request)
     {
         $entityFactory = $this->get('entity_factory');
+        $em = $this->getDoctrine()->getManager();
         
         $projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
         $project = $projectRepo->find(1);
@@ -35,6 +36,9 @@ class FixtureController extends Controller
         $em->persist($project);
 
         $welcome = $entityFactory->makeScene("Welcome", $project);
+        $jardin = $entityFactory->makeScene("Jardin", $project);
+        $jardin->setActions("inspiration+1");
+
         $bureau = $entityFactory->makeScene("Bureau", $project);
         $salon = $entityFactory->makeScene("Salon", $project);
         $secret = $entityFactory->makeScene("Secret", $project);
@@ -42,21 +46,28 @@ class FixtureController extends Controller
         $finHappy = $entityFactory->makeScene("Fin !", $project);
 
         $entityFactory->makeMediaText("Bienvenue dans la maison démo !", $welcome);
+        $entityFactory->makeMediaText("Un grand bol d'air, ca fait du bien !", $jardin);
         $entityFactory->makeMediaText("Vous arrivez dans le bureau", $bureau);
+        $entityFactory->makeMediaText("On dirait qu'il cache quelque chose", $bureau)->setConditions("inspiration>0");
         $entityFactory->makeMediaText("Vous arrivez dans le salon, il est vide.", $salon);
         $entityFactory->makeMediaText("En fouillant, vous trouvez ce que vous cherchez.", $secret);
-        $entityFactory->makeMediaText("Vous quitter la maison démo.", $fin);
-        $entityFactory->makeMediaText("Vous quitter la maison démo, heureux.", $finHappy);
+        $entityFactory->makeMediaText("Vous quittez la maison démo.", $fin);
+        $entityFactory->makeMediaText("Vous quittez la maison démo, heureux.", $finHappy);
 
         $entityFactory->makeConnection($welcome, $bureau, "Aller dans le bureau");
         $entityFactory->makeConnection($welcome, $salon, "Aller dans le salon");
+        $entityFactory->makeConnection($welcome, $jardin, "Aller dans le jardin");
 
-        $entityFactory->makeConnection($bureau, $secret, "", "FOUILLER");
+        $entityFactory->makeConnection($jardin, $welcome, "Retourner dans l'entrée");    
+
+        $entityFactory->makeConnection($bureau, $secret, "", "FOUILLE*;CHERCHE*;TIROIR");
+        $entityFactory->makeConnection($bureau, $secret, "Fouiller le bureau")->setConditions("inspiration>=2");
         $entityFactory->makeConnection($bureau, $salon, "Vers le salon");
         $entityFactory->makeConnection($bureau, $fin, "Quitter la maison démo");
 
         $entityFactory->makeConnection($salon, $bureau, "Vers le bureau");
         $entityFactory->makeConnection($salon, $fin, "Quitter la maison démo");
+        $entityFactory->makeConnection($salon, $welcome, "Retourner dans l'entrée");   
 
         $entityFactory->makeConnection($secret, $finHappy, "Quitter la maison démo");
         

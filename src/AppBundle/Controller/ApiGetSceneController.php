@@ -116,11 +116,12 @@ class ApiGetSceneController extends Controller
     }
 
     protected function processMedias($scene, &$result){
+
         $medias = $scene->getMedias();
 
         foreach ($medias as $media) {
             $result["debug"][] = "Checking Media";
-            
+
             $res = $this->variableChecker->check(
                 $this->variables, 
                 $media->getConditions(), 
@@ -128,8 +129,11 @@ class ApiGetSceneController extends Controller
             );
 
             if (! $res) {
+                $result["debug"][] = "...ignore";
                 continue;
             }
+
+            $result["debug"][] = "...ok";
 
             $m = array(
                 "format" => $media->getFormat(),

@@ -27,6 +27,11 @@ class Project
     private $title;
 
     /**
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description="";
+
+    /**
      * @ORM\Column(name="variables", type="text", nullable=TRUE)
      */
     private $variables;
@@ -88,5 +93,29 @@ class Project
     public function getVariables()
     {
         return $this->variables;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Project
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

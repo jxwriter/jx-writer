@@ -27,9 +27,19 @@ class Media
     private $content;
 
     /**
+     * @ORM\Column(name="title", type="string")
+     */
+    private $title = "";
+
+    /**
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description = "";
+
+    /**
      * @ORM\Column(name="format", type="string", length=255)
      */
-    private $format;
+    private $format = "";
 
     /**
      * @ORM\Column(name="conditions", type="text", nullable=TRUE)
@@ -175,5 +185,53 @@ class Media
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Media
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Media
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

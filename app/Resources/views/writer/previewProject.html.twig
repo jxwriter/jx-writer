@@ -12,8 +12,9 @@
 
 	//preparation de jxServer
 	var jxServer = new JX.Server();
-	jxServer.variables.init("unevariable", 0);
-	jxServer.variables.init("uneautrevariable", 0);
+
+	//initialisation des variables du jeu. 
+	jxServer.variables.init("inspiration", 0);
 
 	//cette fonction sera appellee quand le JSON de la scene sera recu.
 	var handleScene = function(jsonData){
@@ -27,14 +28,21 @@
 		var titleElement = document.getElementById("mainTitle");
 		var mediaElement = document.getElementById("medias");
 		var connectionElement = document.getElementById("connections");
+		var playerElement = document.getElementById("player");
+		var inputElement = document.getElementById("playerInput");
 		
 		//reset elements
 		titleElement.innerHTML = "";
 		mediaElement.innerHTML = "";
 		connectionElement.innerHTML = "";
+		playerElement.innerHTML = "";
+		inputElement.value="";
 		
 		//prise en compte des actions (mise a jour des variables de la scène, s'il y en a)
 		jxServer.variables.update(jsonData.actions);
+
+		//affichage
+		playerElement.innerHTML = "Votre score d'inspiration : " + jxServer.variables.get("inspiration");
 
 		//titre de la page
 		titleElement.innerHTML = "Scène #" + jsonData.id ;
@@ -120,7 +128,8 @@
 			<input type="submit"  />
 		</form>
 	</p>
-
+	
+	<p id="player"></p>
 	
 	
 
