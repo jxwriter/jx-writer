@@ -23,9 +23,9 @@ class MediaFormController extends BaseController
     /**
      * @Route("/media/form/{sceneId}", name="mediaForm", defaults={"sceneId" = 0})
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $sceneId)
     {
-        $form = $this->makeForm($request);
+        $form = $this->makeForm($request, $sceneId);
         
         if ($media = $this->handleForm($form, $request)){
             $this->addFlash("notice", "Saved media : " . $media->getId());
@@ -37,7 +37,14 @@ class MediaFormController extends BaseController
         ));
     }
 
-    protected function makeForm($request){
+    protected function makeForm($request, $sceneId){
+
+        $defaultScene = null;
+        if ($sceneId) {
+            $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+            $defaultScene = $sceneRepo->find($sceneId);
+        }
+
         $formBuilder = $this->createFormBuilder();
 
         $formBuilder->add('project', EntityType::class, array(
@@ -50,6 +57,7 @@ class MediaFormController extends BaseController
 
         $formBuilder->add('scene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
+            'data' => $defaultScene,
             'choice_label' => function ($scene) {
                 return $scene->getId() . " - " . $scene->getTitle();
             },

@@ -6,29 +6,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class SceneListController extends Controller
+class SceneListController extends BaseController
 {
     /**
      * @Route("/scene/list", name="sceneList")
      */
     public function indexAction(Request $request)
     {
+        $project = $this->entityFromSession($request, 'currentProject');
+        $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
 
+        $query = $sceneRepo->createQueryBuilder('s')
+            ->where('s.project = :project')
+            ->setParameter('project', $project)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery();
 
-    /*
-$product = $this->getDoctrine()
-        ->getRepository('AppBundle:Product')
-        ->find($id);
-    */
+        $list = $query->getResult();
 
-        /*$query = $repository->createQueryBuilder('p')
-    ->where('p.price > :price')
-    ->setParameter('price', '19.99')
-    ->orderBy('p.price', 'ASC')
-    ->getQuery();
-
-$products = $query->getResult();*/
-
-        return $this->render('writer/sceneList.html.twig');
+        return $this->render('writer/sceneList.html.twig', ["list"=>$list]);
     }
 }

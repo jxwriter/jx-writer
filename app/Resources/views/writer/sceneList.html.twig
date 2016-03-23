@@ -1,9 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Super
+{% block title %}Les scènes
 {% endblock %}
 
 
 {% block body %}
-    Hello.
+    <table class="list">
+    	<tr>
+    		<th>id</th>
+    		<th>Titre, description</th>
+    		<th>Data</th>
+    		<th>Conditions (variables)</th>
+    		<th>Actions (variables)</th>
+    		<th>Medias</th>
+    		<th>Connexions</th>
+    		<th>Actions</th>
+    	</tr>
+
+    	{% for item in list %}
+    	<tr>
+    		<td>{{ item.id }}</td>
+    		<td><span class="title">{{ item.title }}</span> <span class="description">{{ item.description }}</span></td>
+    		<td>{{ item.data }}</td>
+    		<td>{{ item.conditions }}</td>
+    		<td>{{ item.actions }}</td>
+    		<td>{{ item.medias|length }} médias</td>
+    		<td>{{ item.connections|length }} connexions</td>
+			
+			<td>
+				<a href="{{ path("connectionForm", { "parentSceneId" : item.id }) }}">Ajouter une connexion</a>
+          		<a href="{{ path("mediaForm", { "sceneId" : item.id }) }}">Ajouter un média</a>
+            </td>
+                    
+    	</tr>
+    	{% endfor %}
+    </table>
 {% endblock %}

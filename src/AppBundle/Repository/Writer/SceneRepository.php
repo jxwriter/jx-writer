@@ -10,4 +10,5 @@ namespace AppBundle\Repository\Writer;
  */
 class SceneRepository extends \Doctrine\ORM\EntityRepository
 {
+	
 }
