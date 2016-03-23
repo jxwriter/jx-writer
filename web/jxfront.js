@@ -2,22 +2,51 @@ var JX = {};
 
 JX.Server = function(){
 
-	this.baseUrl = "http://jx.tlabmars.org/sandbox/prototypes/jx-writer/web/api/scene/";
+	this.baseUrl = "http://jx.tlabmars.org/sandbox/prototypes/jx-writer/web/";
+	this.baseUrl = "http://jxwriter.local/app_dev.php/";
 
 	this.variables = new JX.Vars();
+	this.variables.init("_jx", 1);
+
+	this.log = function(message){
+		console.log("[JX] " + message);
+	}
+
+	//Request scene details.
 	this.requestScene = function(sceneId, callbackSuccess, callbackError){
+		this.makeJsonRequest("api/scene/" + sceneId, callbackSuccess, callbackError);
+	};
+
+	//Request pattern validity for the given scene and player input. 
+	//Retrieve the target scene details if match.
+	this.checkPattern = function(currentSceneId, playerInput, callbackSuccess, callbackError){
+		var additionnalParameters = new JX.Vars();
+		additionnalParameters.init("_input", playerInput);
+
+		this.makeJsonRequest("api/connection/" + currentSceneId, callbackSuccess, callbackError, additionnalParameters);	
+	}
+
+	this.makeDefaultCallbackError = function(){
+		return function(e, responseText){
+			console.error(e);
+			console.error(responseText);
+		};
+	}
+	
+	this.makeJsonRequest = function(targetUrl, callbackSuccess, callbackError, additionnalParameters){
+		
+		var params = "?" + this.variables.toString();
+		var additionnalParams = additionnalParameters ? "&" + additionnalParameters.toString() : "";
+
+		var url = this.baseUrl + targetUrl + params + additionnalParams;
+		this.log("Sending : " + url);
 
 		if (!callbackError) {
-			callbackError=function(e, responseText){
-				console.error(e);
-				console.error(responseText);
-			}
+			callbackError=this.makeDefaultCallbackError();
 		}
 
 		var request = new XMLHttpRequest();
-		var params = "?" + this.variables.toString();
-		var url = this.baseUrl + sceneId + params;
-
+		
 		request.open('GET', url, true);
 		request.onload = function(e){
 			var json;
@@ -25,6 +54,11 @@ JX.Server = function(){
 				json = JSON.parse(this.responseText);
 			} catch(exception) {
 				callbackError(exception, this.responseText);
+			}
+
+			if (! json || json.status == "NOK") {
+				callbackError("Empty or NOK data", json);	
+				return;
 			}
 
 			if (json) {

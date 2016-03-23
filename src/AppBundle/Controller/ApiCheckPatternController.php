@@ -34,6 +34,7 @@ class ApiCheckPatternController extends Controller
         $playerInput = $this->cleanInput($request->query->get("_input"));
 
         $result = [];
+        $result['status'] = "OK";
         $result["debug"] = [];
 
         $connections = $scene->getConnections();
@@ -71,8 +72,9 @@ class ApiCheckPatternController extends Controller
 
             
         }
-        
-        $result["result"][] = "No match for this input.";
+
+        $result['status'] = "NOK";
+        $result["message"][] = "No match for this input.";
 
         if (!$isDebug){
             unset($result["debug"]);

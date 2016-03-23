@@ -29,6 +29,7 @@ class ApiGetSceneController extends Controller
         
         $result = array();
         
+        
         try {
             $receivedVariableString = implode(",", array_keys($this->variables));
             $result['debug'][] = "Notice: received variables: " . $receivedVariableString;
