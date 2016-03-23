@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les connections
+{% endblock %}
+
+
+{% block body %}
+	<h1>Les connexions</h1>
+    <table class="list">
+    	<tr>
+    		<th>id</th>
+    		<th>Label</th>
+    		<th>Pattern</th>
+    		<th>Conditions (variables)</th>
+    		<th>Position</th>
+    		<th>Scène parente</th>
+    		<th>Scène cible</th>
+    		<th>Projet</th>
+
+    		<th>Actions</th>
+    	</tr>
+
+    	{% for item in list %}
+    	<tr>
+    		<td>{{ item.id }}</td>
+    		<td>{{ item.label }}</td>
+    		<td>{{ item.pattern }}</td>
+    		<td>{{ item.conditions }}</td>
+    		<td>{{ item.position }}</td>
+    		<td>{{ item.parentScene.title }}</td>
+    		<td>{{ item.childScene.title }}</td>
+    		<td>{{ item.childScene.project.title }}</td>
+			
+			<td>
+				
+            </td>
+                    
+    	</tr>
+    	{% endfor %}
+    </table>
+{% endblock %}

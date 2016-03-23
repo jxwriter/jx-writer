@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les médias
+{% endblock %}
+
+
+{% block body %}
+    <h1>Les médias</h1>
+
+    <table class="list">
+    	<tr>
+    		<th>id</th>
+    		<th>Titre, description</th>
+    		<th>Position</th>
+            <th>Format</th>
+    		<th>Contenu</th>
+    		<th>Conditions (variables)</th>
+            <th>Scène</th>
+            <th>Projet</th>
+            <th>Actions</th>
+    	</tr>
+
+    	{% for item in list %}
+    	<tr>
+    		<td>{{ item.id }}</td>
+    		<td><span class="title">{{ item.title }}</span> <span class="description">{{ item.description }}</span></td>
+    		<td>{{ item.position }}</td>
+    		<td>{{ item.format }}</td>
+            <td>{{ item.content }}</td>
+    		<td>{{ item.conditions }}</td>
+            <td><a href="{{ path("mediaList", { "sceneId" : item.scene.id }) }}">{{ item.scene.title }} (#{{ item.scene.id }})</a></td>
+            <td>{{ item.scene.project.title }}</td>
+			<td>
+				
+            </td>
+                    
+    	</tr>
+    	{% endfor %}
+    </table>
+{% endblock %}

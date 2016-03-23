@@ -24,8 +24,8 @@
     		<td>{{ item.data }}</td>
     		<td>{{ item.conditions }}</td>
     		<td>{{ item.actions }}</td>
-    		<td>{{ item.medias|length }} médias</td>
-    		<td>{{ item.connections|length }} connexions</td>
+    		<td><a href="{{ path("mediaList", { "sceneId" : item.id }) }}">{{ item.medias|length }} médias</a></td>
+    		<td><a href="{{ path("connectionList", { "sceneId" : item.id }) }}">{{ item.connections|length }} connexions</a></td>
 			
 			<td>
 				<a href="{{ path("connectionForm", { "parentSceneId" : item.id }) }}">Ajouter une connexion</a>
