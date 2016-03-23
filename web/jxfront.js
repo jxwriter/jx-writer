@@ -87,7 +87,24 @@ JX.Vars = function(){
 		this.variables[name] = value;
 	}
 
-	this.add = function(name, value){
+	this.update = function(actions){
+		if (! actions || actions.length == 0) {
+			return;
+		}
+
+		for(variable in actions) {
+			this.add(variable, actions[variable]);
+		}
+
+		console.log("[jx] updated variables : ");
+		console.log(this.variables);
+	}
+
+	this.add = function(name, value) {
+		if (! this.variables[name]){
+			this.variables[name] = 0;
+		}
+
 		this.variables[name] += value;
 	}
 

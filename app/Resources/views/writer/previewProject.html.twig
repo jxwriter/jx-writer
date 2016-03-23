@@ -33,6 +33,9 @@
 		mediaElement.innerHTML = "";
 		connectionElement.innerHTML = "";
 		
+		//prise en compte des actions (mise a jour des variables de la scène, s'il y en a)
+		jxServer.variables.update(jsonData.actions);
+
 		//titre de la page
 		titleElement.innerHTML = "Scène #" + jsonData.id ;
 		titleElement.innerHTML += " : " + jsonData.title ;
