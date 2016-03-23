@@ -5,16 +5,16 @@
 
 
 {% block body %}
-    <h1>Choix du projet (TODO :)) : </h1>
+    <h1>Choix du projet : </h1>
     <ul>
     	
 	{% for project in projects %}
-        <li><a href="{{ path("homepage", { "projectId" : project.id }) }}">{{ project.title }}</a></li>
+        <li><a href="{{ path("chooseProject", { "projectId" : project.id }) }}">{{ project.title }}</a></li>
     {% endfor %}
 
     </ul>
-
-    
+	
+	 
 
  
 {% endblock %}

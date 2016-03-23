@@ -18,14 +18,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class MediaFormController extends Controller
+class MediaFormController extends BaseController
 {
     /**
      * @Route("/media/form/{sceneId}", name="mediaForm", defaults={"sceneId" = 0})
      */
     public function indexAction(Request $request)
     {
-        $form = $this->makeForm();
+        $form = $this->makeForm($request);
         
         if ($media = $this->handleForm($form, $request)){
             $this->addFlash("notice", "Saved media : " . $media->getId());
@@ -37,11 +37,12 @@ class MediaFormController extends Controller
         ));
     }
 
-    protected function makeForm(){
+    protected function makeForm($request){
         $formBuilder = $this->createFormBuilder();
 
         $formBuilder->add('project', EntityType::class, array(
             'class' => 'AppBundle:Writer\Project',
+            'data' => $this->entityFromSession($request, 'currentProject'),
             'choice_label' => function ($project) {
                 return $project->getId() . " - " . $project->getTitle();
             }

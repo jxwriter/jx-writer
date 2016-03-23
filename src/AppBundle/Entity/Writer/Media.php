@@ -27,12 +27,12 @@ class Media
     private $content;
 
     /**
-     * @ORM\Column(name="title", type="string")
+     * @ORM\Column(name="title", type="string", nullable=TRUE)
      */
     private $title = "";
 
     /**
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=TRUE)
      */
     private $description = "";
 

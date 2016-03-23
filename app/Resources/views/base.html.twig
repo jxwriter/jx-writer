@@ -12,6 +12,9 @@
         <div id="page">
             <header>
                 <h1>JX WRITER</h1>
+                {% if app.session.get("currentProject") %}
+                <p>Projet en cours : {{ app.session.get("currentProject").title }}</p>
+                {% endif %}
             </header>
 
             <nav class="mainMenu">
@@ -19,6 +22,7 @@
                 <ul>
                     <li><a href="{{ path("homepage") }}">Choix du projet</a></li>
                     <li><a href="{{ path("previewProject", { "sceneId" : 1 }) }}">Preview de la scene 1</a></li>
+                    <li><a href="{{ path("projectForm") }}">Ajouter un projet</a></li>
                     <li><a href="{{ path("sceneForm") }}">Ajouter une scène</a></li>
                     <li><a href="{{ path("connectionForm", { "parentSceneId" : 1 }) }}">Ajouter une connexion</a></li>
                     <li><a href="{{ path("mediaForm", { "sceneId" : 1 }) }}">Ajouter un média</a></li>

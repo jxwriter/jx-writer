@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un project{% endblock %}
+
+{% block body %}
+	<h1>Ajouter un project</h1>
+
+    {{ form_start(formProject) }}
+	{{ form_widget(formProject) }}
+	{{ form_end(formProject) }}
+{% endblock %}

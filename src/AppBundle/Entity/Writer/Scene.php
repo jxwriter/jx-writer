@@ -55,12 +55,12 @@ class Scene
     private $connections;
 
     /**
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=TRUE)
      */
     private $description = "";
 
     /**
-     * @ORM\Column(name="data", type="string", length=255)
+     * @ORM\Column(name="data", type="string", length=255, nullable=TRUE)
      */
     private $data = "";
 

@@ -15,13 +15,27 @@ class ProjectChooserController extends Controller
     {
 		$projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
 
-		if ($request->query->has("projectId")) {
-			//add to session
-			//redirect to list
-		}
-
     	$projects = $projectRepo->findAll();
         return $this->render('writer/projectChooser.html.twig', 
         	array("projects"=>$projects));
     }
+
+    /**
+     * @Route("/{projectId}", name="chooseProject")
+     */
+    public function chooseProjectAction(Request $request, $projectId)
+    {
+        $projectRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Project');
+
+        $project =  $projectRepo->findById($projectId);        
+        $projects = $projectRepo->findAll();
+
+        $session = $request->getSession();
+
+        $session->set('currentProject', $project[0]);
+
+        return $this->render('writer/projectChooser.html.twig', 
+            array("projects"=>$projects));
+    }
+
 }

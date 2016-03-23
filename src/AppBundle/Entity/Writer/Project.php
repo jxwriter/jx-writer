@@ -27,7 +27,7 @@ class Project
     private $title;
 
     /**
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=TRUE)
      */
     private $description="";
 

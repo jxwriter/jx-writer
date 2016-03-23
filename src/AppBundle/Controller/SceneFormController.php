@@ -17,14 +17,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class SceneFormController extends Controller
+class SceneFormController extends BaseController
 {
     /**
      * @Route("/scene/form", name="sceneForm")
      */
     public function indexAction(Request $request)
     {
-        $form = $this->makeSceneForm();
+        $form = $this->makeSceneForm($request);
         
         if ($scene = $this->handleForm($form, $request)){
             $this->addFlash("notice", "Saved scene : " . $scene->getId());
@@ -36,11 +36,12 @@ class SceneFormController extends Controller
         ));
     }
 
-    protected function makeSceneForm(){
+    protected function makeSceneForm($request){
         $formSceneBuilder = $this->createFormBuilder();
 
         $formSceneBuilder->add('project', EntityType::class, array(
             'class' => 'AppBundle:Writer\Project',
+            'data' => $this->entityFromSession($request, 'currentProject'),
             'choice_label' => function ($project) {
                 return $project->getTitle();
             }
@@ -48,10 +49,10 @@ class SceneFormController extends Controller
 
         $formSceneBuilder
             ->add('title', TextType::class)
-            ->add('description', TextareaType::class, array('required' => false))
-            ->add('conditions', TextareaType::class, array('required' => false))
-            ->add('actions', TextareaType::class, array('required' => false))
-            ->add('data', TextType::class, array('required' => false))
+            ->add('description', TextareaType::class, array('required' => false, 'data' => ''))
+            ->add('conditions', TextareaType::class, array('required' => false, 'data' => ''))
+            ->add('actions', TextareaType::class, array('required' => false, 'data' => ''))
+            ->add('data', TextType::class, array('required' => false, 'data' => ''))
             ->add('save', SubmitType::class);
 
         return $formSceneBuilder->getForm();

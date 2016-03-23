@@ -60,4 +60,13 @@ class EntityFactory
         return $scene;
     }
 
+    public function makeProject($title){
+        $project = new Project();
+        $project->setTitle($title);
+
+        $this->entityManager->persist($project);
+
+        return $project;
+    }
+
 }

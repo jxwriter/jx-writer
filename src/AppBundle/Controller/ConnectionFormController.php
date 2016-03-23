@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class ConnectionFormController extends Controller
+class ConnectionFormController extends BaseController
 {
     /**
      * @Route("/connection/form/{parentSceneId}", name="connectionForm", defaults={"parentSceneId" = 0})
@@ -26,7 +26,7 @@ class ConnectionFormController extends Controller
     public function indexAction(Request $request, $parentSceneId)
     {
      
-        $form = $this->makeSceneForm($parentSceneId);
+        $form = $this->makeForm($request, $parentSceneId);
         
         if ($connection = $this->handleForm($form, $request)){
             $this->addFlash("notice", "Saved connection : " . $connection->getId());
@@ -38,7 +38,7 @@ class ConnectionFormController extends Controller
         ));
     }
 
-    protected function makeSceneForm($parentSceneId){
+    protected function makeForm($request, $parentSceneId){
 
         $defaultParentScene = null;
         if ($parentSceneId) {
@@ -50,6 +50,7 @@ class ConnectionFormController extends Controller
 
         $formSceneBuilder->add('project', EntityType::class, array(
             'class' => 'AppBundle:Writer\Project',
+            'data' => $this->entityFromSession($request, 'currentProject'),
             'choice_label' => function ($project) {
                 return $project->getId() . " - " . $project->getTitle();
             }
