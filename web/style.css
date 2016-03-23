@@ -19,12 +19,30 @@ body {
 	color: orange;
 }
 
+.mainMenu {
 
-.previewProject h1, .previewProject h2 {
+}
+
+#form div {
+	padding: 0.2em;
+}
+
+#form div label {
+	padding: 0.5em;
+	display: block;
+}
+
+#form div button {
+	margin-top: 1em;
 	font-size: 1.2em;
 }
 
-.previewProject  li{
+
+.preview h1, .preview h2 {
+	font-size: 1.2em;
+}
+
+.preview  li{
 	list-style: none;
 	font-size: 2.3em;
 	padding: 0.5em;
@@ -32,26 +50,26 @@ body {
 	background-color: #dddddd;
 }
 
-.previewProject .medias li{
+.preview .medias li{
 	background-color: #aaaaaa;
 }
 
-.previewProject .patterns li{
+.preview .patterns li{
 	font-size: .8em;
 }
 
-.previewProject input {
+.preview input {
 	font-size: 1em;
 	padding: 0.5em;
 	
 }
 
-.previewProject  a {
+.preview  a {
 	text-decoration: none;
 	color: #333333;
 }
 
-.previewProject a:hover {
+.preview a:hover {
 	text-decoration: underline;
 	
 }

@@ -19,8 +19,12 @@ class EntityFactory
 	}
 
     public function makeMediaText($content, $inScene=null) {
+        return $this->makeMedia($content, $inScene, "text");
+    }
+
+    public function makeMedia($content, $inScene=null, $format="text") {
         $media = new Media();
-        $media->setFormat("text");
+        $media->setFormat($format);
         $media->setContent($content);
 
         if ($inScene) {
@@ -31,6 +35,7 @@ class EntityFactory
 
         return $media;
     }
+
 
     public function makeConnection($scene1, $scene2, $label="", $pattern=""){
         $connection = new SceneConnection();

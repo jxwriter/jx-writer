@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter / Editer un média{% endblock %}
+
+{% block body %}
+	<h1>Ajouter / Editer un média</h1>
+
+    {{ form_start(formMedia) }}
+	{{ form_widget(formMedia) }}
+	{{ form_end(formMedia) }}
+{% endblock %}

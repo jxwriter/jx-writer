@@ -23,12 +23,9 @@ class ApiGetSceneController extends Controller
         $this->variables = $this->extractRequestVariables($request);
 
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
-        
         $scene = $sceneRepo->find($sceneId);
         
-        
         $result = array();
-        
         
         try {
             $receivedVariableString = implode(",", array_keys($this->variables));
