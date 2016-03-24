@@ -15,21 +15,33 @@ class ConnectionListController extends BaseController
     {
         $project = $this->entityFromSession($request, 'currentProject');
         $connnectionRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\SceneConnection');
+        $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+            
+        $parentScene = null;
+        $childScene = null;
 
-        $scene = null;
-        $sceneId = $request->query->get("sceneId");
+        $parentSceneId = $request->query->get("parentSceneId");
+        $childSceneId = $request->query->get("childSceneId");
         
-        if ($sceneId){
-            $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
-            $scene = $sceneRepo->find($sceneId);
+        if ($parentSceneId){
+            $parentScene = $sceneRepo->find($parentSceneId);
+        }
+
+        if ($childSceneId){
+            $childScene = $sceneRepo->find($childSceneId);
         }
 
         $queryBuilder = $connnectionRepo->createQueryBuilder('e')
             ->orderBy('e.id', 'ASC');
 
-        if ($scene) {
-            $queryBuilder->andWhere('e.scene = :scene')
-            ->setParameter('scene', $scene);
+        if ($parentScene) {
+            $queryBuilder->andWhere('e.parentScene = :parentScene')
+            ->setParameter('parentScene', $parentScene);
+        }
+
+        if ($childScene) {
+            $queryBuilder->andWhere('e.childScene = :childScene')
+            ->setParameter('childScene', $childScene);
         }
 
         $list = $queryBuilder->getQuery()->getResult();

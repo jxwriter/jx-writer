@@ -5,6 +5,12 @@
 
 
 {% block body %}
+    <h1>Les scènes</h1>
+
+    <ul>
+        <li><a href="{{ path("sceneForm") }}">Ajouter une scène</a></li>
+    </ul>
+
     <table class="list">
     	<tr>
     		<th>id</th>
@@ -24,12 +30,18 @@
     		<td>{{ item.data }}</td>
     		<td>{{ item.conditions }}</td>
     		<td>{{ item.actions }}</td>
-    		<td><a href="{{ path("mediaList", { "sceneId" : item.id }) }}">{{ item.medias|length }} médias</a></td>
-    		<td><a href="{{ path("connectionList", { "sceneId" : item.id }) }}">{{ item.connections|length }} connexions</a></td>
+    		<td><a href="{{ path("mediaList", { "sceneId" : item.id }) }}">{{ item.medias|length }}&nbsp;média(s)</a></td>
+    		<td><a href="{{ path("connectionList", { "parentSceneId" : item.id }) }}">{{ item.connections|length }}&nbsp;connexion(s)</a></td>
 			
 			<td>
-				<a href="{{ path("connectionForm", { "parentSceneId" : item.id }) }}">Ajouter une connexion</a>
-          		<a href="{{ path("mediaForm", { "sceneId" : item.id }) }}">Ajouter un média</a>
+				<ul class="actions">
+                    <li><a href="{{ path("connectionForm", { "parentSceneId" : item.id }) }}">Ajouter une connexion</a></li>
+                    <li><a href="{{ path("mediaForm", { "sceneId" : item.id }) }}">Ajouter un média</a></li>
+                    <li><a href="{{ path("previewProject", { "sceneId" : item.id }) }}">Preview</a></li>
+                    <li><a href="{{ path("connectionList", { "parentSceneId" : item.id }) }}">Voir les connexions depuis cette scène</a></li>
+                    <li><a href="{{ path("connectionList", { "childSceneId" : item.id }) }}">Voir les connexions vers cette scène</a></li>
+                </ul>
+                
             </td>
                     
     	</tr>

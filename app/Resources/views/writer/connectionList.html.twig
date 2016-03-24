@@ -6,6 +6,11 @@
 
 {% block body %}
 	<h1>Les connexions</h1>
+
+	<ul>
+		<li><a href="{{ path("connectionForm", { "parentSceneId" : 1 }) }}">Ajouter une connexion</a></li>
+	</ul>
+
     <table class="list">
     	<tr>
     		<th>id</th>
@@ -27,8 +32,8 @@
     		<td>{{ item.pattern }}</td>
     		<td>{{ item.conditions }}</td>
     		<td>{{ item.position }}</td>
-    		<td>{{ item.parentScene.title }}</td>
-    		<td>{{ item.childScene.title }}</td>
+    		<td>#{{ item.parentScene.id }} {{ item.parentScene.title }}</td>
+    		<td>#{{ item.childScene.id }} {{ item.childScene.title }}</td>
     		<td>{{ item.childScene.project.title }}</td>
 			
 			<td>
