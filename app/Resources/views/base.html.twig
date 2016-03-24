@@ -16,7 +16,8 @@
                 <p>Projet en cours : {{ app.session.get("currentProject").title }}</p>
                 {% endif %}
             </header>
-
+            
+            {% if app.session.get("currentProject") %}
             <nav class="mainMenu">
                 <h2>Menu</h2>
                 <ul>
@@ -27,6 +28,7 @@
                     <li><a href="{{ path("help") }}">Aide</a></li>
                 </ul>
             </nav>
+            {% endif %}
 
             {% for flashType, flashContent in app.session.flashbag.all %}
                 {% for flash in flashContent %}

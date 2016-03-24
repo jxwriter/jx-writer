@@ -8,6 +8,7 @@ use AppBundle\Entity\Writer\SceneConnection;
 use AppBundle\Entity\Writer\Product;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -37,7 +38,15 @@ class SceneFormController extends BaseController
     }
 
     protected function makeSceneForm($request){
-        $formSceneBuilder = $this->createFormBuilder();
+
+        $entityToEdit = $this->get('entity_factory')->makeEmptyScene();
+
+        if ($request->query->get("editId")){
+            $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+            $entityToEdit = $sceneRepo->find($request->query->get("editId"));
+        } 
+
+        $formSceneBuilder = $this->createFormBuilder($entityToEdit);
 
         $formSceneBuilder->add('project', EntityType::class, array(
             'class' => 'AppBundle:Writer\Project',
@@ -48,11 +57,12 @@ class SceneFormController extends BaseController
         ));
 
         $formSceneBuilder
+            ->add('id', HiddenType::class)
             ->add('title', TextType::class)
-            ->add('description', TextareaType::class, array('required' => false, 'data' => ''))
-            ->add('conditions', TextareaType::class, array('required' => false, 'data' => ''))
-            ->add('actions', TextareaType::class, array('required' => false, 'data' => ''))
-            ->add('data', TextType::class, array('required' => false, 'data' => ''))
+            ->add('description', TextareaType::class, array('required' => false))
+            ->add('conditions', TextareaType::class, array('required' => false))
+            ->add('actions', TextareaType::class, array('required' => false))
+            ->add('data', TextType::class, array('required' => false))
             ->add('save', SubmitType::class);
 
         return $formSceneBuilder->getForm();

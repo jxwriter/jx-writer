@@ -16,6 +16,7 @@ class MediaListController extends BaseController
         
         $scene = null;
         $sceneId = $request->query->get("sceneId");
+        
         if ($sceneId){
             $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
             $scene = $sceneRepo->find($sceneId);
@@ -24,16 +25,7 @@ class MediaListController extends BaseController
         $project = $this->entityFromSession($request, 'currentProject');
         $repo = $this->getDoctrine()->getRepository('AppBundle:Writer\Media');
 
-        $queryBuilder = $repo->createQueryBuilder('e')
-            
-            ->orderBy('e.id', 'ASC');
-
-        if ($scene) {
-            $queryBuilder->andWhere('e.scene = :scene')
-            ->setParameter('scene', $scene);
-        }
-
-        $list = $queryBuilder->getQuery()->getResult();
+        $list = $repo->getMediaListQueryBuilder($project, $scene)->getQuery()->getResult();
 
         return $this->render('writer/mediaList.html.twig', ["list"=>$list]);
     }

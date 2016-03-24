@@ -10,5 +10,24 @@ namespace AppBundle\Repository\Writer;
  */
 class SceneRepository extends \Doctrine\ORM\EntityRepository
 {
-	
+	public $currentProject = null;
+
+	public function getSceneListQueryBuilder($project=null){
+
+		if (! $project) {
+			$project = $this->currentProject;
+		}
+
+		$queryBuilder = $this->createQueryBuilder('e')
+			->orderBy('e.id', 'ASC');
+
+		if ($project) { 
+			$queryBuilder
+			->andWhere('e.project = :project')
+			->setParameter('project', $project);
+		}
+
+        return $queryBuilder;
+
+	}
 }

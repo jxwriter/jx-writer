@@ -39,25 +39,24 @@ class MediaFormController extends BaseController
 
     protected function makeForm($request, $sceneId){
 
+        $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+        $currentProject = $this->entityFromSession($request, 'currentProject');
+        $sceneRepo->currentProject = $currentProject;
+
         $defaultScene = null;
         if ($sceneId) {
-            $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
             $defaultScene = $sceneRepo->find($sceneId);
         }
 
         $formBuilder = $this->createFormBuilder();
 
-        $formBuilder->add('project', EntityType::class, array(
-            'class' => 'AppBundle:Writer\Project',
-            'data' => $this->entityFromSession($request, 'currentProject'),
-            'choice_label' => function ($project) {
-                return $project->getId() . " - " . $project->getTitle();
-            }
-        ));
-
         $formBuilder->add('scene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
             'data' => $defaultScene,
+            'query_builder' => function ($er) {
+                return $er->getSceneListQueryBuilder();
+            },
+
             'choice_label' => function ($scene) {
                 return $scene->getId() . " - " . $scene->getTitle();
             },
@@ -84,7 +83,6 @@ class MediaFormController extends BaseController
 
         $entityFactory = $this->get('entity_factory');
 
-        $project = $form["project"]->getData();
         $scene = $form["scene"]->getData();
         $title = $form["title"]->getData();
         $description = $form["description"]->getData();

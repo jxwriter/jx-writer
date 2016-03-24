@@ -40,25 +40,25 @@ class ConnectionFormController extends BaseController
 
     protected function makeForm($request, $parentSceneId){
 
+        $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
+        $currentProject = $this->entityFromSession($request, 'currentProject');
+        $sceneRepo->currentProject = $currentProject;
+
         $defaultParentScene = null;
         if ($parentSceneId) {
-            $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
             $defaultParentScene = $sceneRepo->find($parentSceneId);
         }
 
         $formSceneBuilder = $this->createFormBuilder();
 
-        $formSceneBuilder->add('project', EntityType::class, array(
-            'class' => 'AppBundle:Writer\Project',
-            'data' => $this->entityFromSession($request, 'currentProject'),
-            'choice_label' => function ($project) {
-                return $project->getId() . " - " . $project->getTitle();
-            }
-        ));
+        
 
         $formSceneBuilder->add('parentScene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
             'data' => $defaultParentScene,
+            'query_builder' => function ($er) {
+                return $er->getSceneListQueryBuilder();
+            },
             'choice_label' => function ($scene) {
                 return $scene->getId() . " - " . $scene->getTitle();
             },
@@ -66,6 +66,9 @@ class ConnectionFormController extends BaseController
 
         $formSceneBuilder->add('childScene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
+            'query_builder' => function ($er) {
+                return $er->getSceneListQueryBuilder();
+            },
             'choice_label' => function ($scene) {
                 return $scene->getId() . " - " . $scene->getTitle();
             }
@@ -90,7 +93,6 @@ class ConnectionFormController extends BaseController
         }
 
         $entityFactory = $this->get('entity_factory');
-        $project = $form["project"]->getData();
         $label = $form["label"]->getData();
         $pattern = $form["pattern"]->getData();
         $position = $form["position"]->getData();

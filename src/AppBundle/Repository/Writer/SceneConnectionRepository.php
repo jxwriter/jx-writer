@@ -10,4 +10,29 @@ namespace AppBundle\Repository\Writer;
  */
 class SceneConnectionRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function getConnectionListQueryBuilder($project, $parentScene, $childScene){
+
+		$queryBuilder = $this->createQueryBuilder('e')
+            ->orderBy('e.position', 'ASC')
+            ->orderBy('e.id', 'ASC');
+
+        $queryBuilder
+            ->leftJoin("e.parentScene", "s")
+            ->leftJoin("s.project", "p")
+            ->andWhere('s.project = :project')
+            ->setParameter('project', $project);
+
+        if ($parentScene) {
+            $queryBuilder->andWhere('e.parentScene = :parentScene')
+            ->setParameter('parentScene', $parentScene);
+        }
+
+        if ($childScene) {
+            $queryBuilder->andWhere('e.childScene = :childScene')
+            ->setParameter('childScene', $childScene);
+        }
+
+        return $queryBuilder;
+
+	}
 }

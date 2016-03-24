@@ -10,4 +10,24 @@ namespace AppBundle\Repository\Writer;
  */
 class MediaRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function getMediaListQueryBuilder($project, $scene){
+
+		$queryBuilder = $this->createQueryBuilder('e')
+            ->orderBy('e.id', 'ASC');
+
+        $queryBuilder
+            ->leftJoin("e.scene", "s")
+            ->leftJoin("s.project", "p")
+            ->andWhere('s.project = :project')
+            ->setParameter('project', $project);
+
+        if ($scene) {
+            $queryBuilder->andWhere('e.scene = :scene')
+            ->setParameter('scene', $scene);
+        }
+
+        return $queryBuilder;
+
+	}
+
 }

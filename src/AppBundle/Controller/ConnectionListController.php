@@ -31,19 +31,7 @@ class ConnectionListController extends BaseController
             $childScene = $sceneRepo->find($childSceneId);
         }
 
-        $queryBuilder = $connnectionRepo->createQueryBuilder('e')
-            ->orderBy('e.id', 'ASC');
-
-        if ($parentScene) {
-            $queryBuilder->andWhere('e.parentScene = :parentScene')
-            ->setParameter('parentScene', $parentScene);
-        }
-
-        if ($childScene) {
-            $queryBuilder->andWhere('e.childScene = :childScene')
-            ->setParameter('childScene', $childScene);
-        }
-
+        $queryBuilder = $connnectionRepo->getConnectionListQueryBuilder($project, $parentScene, $childScene);
         $list = $queryBuilder->getQuery()->getResult();
 
         return $this->render('writer/connectionList.html.twig', ["list"=>$list]);

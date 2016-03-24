@@ -60,6 +60,11 @@ class EntityFactory
         return $scene;
     }
 
+    public function makeEmptyScene(){
+        $scene = new Scene();
+        return $scene;
+    }
+
     public function makeProject($title){
         $project = new Project();
         $project->setTitle($title);
