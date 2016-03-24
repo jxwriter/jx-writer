@@ -60,9 +60,34 @@ class EntityFactory
         return $scene;
     }
 
-    public function makeEmptyScene(){
+    public function makeEmptyScene($persist=false){
         $scene = new Scene();
+
+        if ($persist){
+            $this->entityManager->persist($scene);
+        }
+
         return $scene;
+    }
+
+    public function makeEmptyMedia($persist=false){
+        $media = new Media();
+
+        if ($persist){
+            $this->entityManager->persist($media);
+        }
+
+        return $media;
+    }
+
+    public function makeEmptyConnection($persist=false){
+        $connection = new SceneConnection();
+
+        if ($persist){
+            $this->entityManager->persist($connection);
+        }
+
+        return $connection;
     }
 
     public function makeProject($title){
@@ -76,13 +101,26 @@ class EntityFactory
 
     public function loadOrEmptyScene($id){
         if (!$id) {
-            $scene = $this->makeEmptyScene();
-            $this->entityManager->persist($scene);
-            return $scene;
+            return $this->makeEmptyScene(true);
         }
 
         return $this->entityManager->getRepository('AppBundle:Writer\Scene')->findOneById($id);
+    }
 
+    public function loadOrEmptyMedia($id){
+        if (!$id) {
+            return $this->makeEmptyMedia(true);
+        }
+
+        return $this->entityManager->getRepository('AppBundle:Writer\Media')->findOneById($id);
+    }
+
+    public function loadOrEmptyConnection($id){
+        if (!$id) {
+            return $this->makeEmptyConnection(true);
+        }
+
+        return $this->entityManager->getRepository('AppBundle:Writer\SceneConnection')->findOneById($id);
     }
 
 }

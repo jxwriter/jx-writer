@@ -8,6 +8,7 @@ use AppBundle\Entity\Writer\SceneConnection;
 use AppBundle\Entity\Writer\Product;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -39,16 +40,24 @@ class MediaFormController extends BaseController
 
     protected function makeForm($request, $sceneId){
 
+        $entityToEdit = $this->get('entity_factory')->makeEmptyMedia();
+        $defaultScene = null;
+
+        if ($request->query->get("editId")){
+            $repo = $this->getDoctrine()->getRepository('AppBundle:Writer\Media');
+            $entityToEdit = $repo->find($request->query->get("editId"));
+            $defaultScene = $entityToEdit->getScene();
+        } 
+
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         $currentProject = $this->entityFromSession($request, 'currentProject');
         $sceneRepo->currentProject = $currentProject;
 
-        $defaultScene = null;
-        if ($sceneId) {
+        if (! $defaultScene && $sceneId) {
             $defaultScene = $sceneRepo->find($sceneId);
         }
 
-        $formBuilder = $this->createFormBuilder();
+        $formBuilder = $this->createFormBuilder($entityToEdit);
 
         $formBuilder->add('scene', EntityType::class, array(
             'class' => 'AppBundle:Writer\Scene',
@@ -63,6 +72,7 @@ class MediaFormController extends BaseController
         ));
 
         $formBuilder
+            ->add('id', HiddenType::class, array('mapped' => false, 'data' => $entityToEdit->getId()))
             ->add('title', TextType::class)
             ->add('description', TextareaType::class, array('required' => false))
             ->add('format', TextType::class, array('required' => true, 'data'=>'text'))
@@ -82,7 +92,7 @@ class MediaFormController extends BaseController
         }
 
         $entityFactory = $this->get('entity_factory');
-
+        $id = $form["id"]->getData();
         $scene = $form["scene"]->getData();
         $title = $form["title"]->getData();
         $description = $form["description"]->getData();
@@ -91,7 +101,10 @@ class MediaFormController extends BaseController
         $conditions = $form["conditions"]->getData();
         $position = $form["position"]->getData();
         
-        $media = $entityFactory->makeMedia($content, $scene, $format);
+        $media = $entityFactory->loadOrEmptyMedia($id);
+        $media->setContent($content);
+        $media->setFormat($format);
+        $media->setScene($scene);
         $media->setTitle($title);
         $media->setDescription($description);
         $media->setConditions($conditions);

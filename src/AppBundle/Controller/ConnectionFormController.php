@@ -8,6 +8,7 @@ use AppBundle\Entity\Writer\SceneConnection;
 use AppBundle\Entity\Writer\Product;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -40,16 +41,26 @@ class ConnectionFormController extends BaseController
 
     protected function makeForm($request, $parentSceneId){
 
+        $entityToEdit = $this->get('entity_factory')->makeEmptyConnection();
+        $defaultParentScene = null;
+
+        if ($request->query->get("editId")){
+            $repo = $this->getDoctrine()->getRepository('AppBundle:Writer\SceneConnection');
+            $entityToEdit = $repo->find($request->query->get("editId"));
+
+            $defaultParentScene = $entityToEdit->getParentScene();
+        } 
+
         $sceneRepo = $this->getDoctrine()->getRepository('AppBundle:Writer\Scene');
         $currentProject = $this->entityFromSession($request, 'currentProject');
         $sceneRepo->currentProject = $currentProject;
 
-        $defaultParentScene = null;
-        if ($parentSceneId) {
+        
+        if (!$defaultParentScene && $parentSceneId) {
             $defaultParentScene = $sceneRepo->find($parentSceneId);
         }
 
-        $formSceneBuilder = $this->createFormBuilder();
+        $formSceneBuilder = $this->createFormBuilder($entityToEdit);
 
         
 
@@ -75,6 +86,7 @@ class ConnectionFormController extends BaseController
         ));
 
         $formSceneBuilder
+            ->add('id', HiddenType::class, array('mapped' => false, 'data' => $entityToEdit->getId()))
             ->add('label', TextType::class, array('required' => false))
             ->add('pattern', TextType::class, array('required' => false))
             ->add('position', NumberType::class, array('data' => 0))
@@ -93,6 +105,8 @@ class ConnectionFormController extends BaseController
         }
 
         $entityFactory = $this->get('entity_factory');
+        $id = $form["id"]->getData();
+        
         $label = $form["label"]->getData();
         $pattern = $form["pattern"]->getData();
         $position = $form["position"]->getData();
@@ -101,7 +115,12 @@ class ConnectionFormController extends BaseController
         $parentScene = $form["parentScene"]->getData();
         $childScene = $form["childScene"]->getData();
 
-        $connection = $entityFactory->makeConnection($parentScene, $childScene, $label, $pattern);
+        $connection = $entityFactory->loadOrEmptyConnection($id);
+
+        $connection->setParentScene($parentScene);
+        $connection->setChildScene($childScene);
+        $connection->setLabel($label);
+        $connection->setPattern($pattern);
         $connection->setConditions($conditions);
         $connection->setPosition($position);
 
