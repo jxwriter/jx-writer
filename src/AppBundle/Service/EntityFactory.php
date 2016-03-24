@@ -74,4 +74,15 @@ class EntityFactory
         return $project;
     }
 
+    public function loadOrEmptyScene($id){
+        if (!$id) {
+            $scene = $this->makeEmptyScene();
+            $this->entityManager->persist($scene);
+            return $scene;
+        }
+
+        return $this->entityManager->getRepository('AppBundle:Writer\Scene')->findOneById($id);
+
+    }
+
 }

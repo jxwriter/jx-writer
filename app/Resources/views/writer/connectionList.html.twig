@@ -37,7 +37,9 @@
     		<td>{{ item.childScene.project.title }}</td>
 			
 			<td>
-				
+				<ul class="actions">
+                <li><a href="{{ path("connectionForm", { "editId" : item.id }) }}">Editer</a></li>
+                </ul>
             </td>
                     
     	</tr>

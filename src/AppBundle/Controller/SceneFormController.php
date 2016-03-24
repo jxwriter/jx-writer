@@ -28,6 +28,7 @@ class SceneFormController extends BaseController
         $form = $this->makeSceneForm($request);
         
         if ($scene = $this->handleForm($form, $request)){
+            print_r( $scene->getId());
             $this->addFlash("notice", "Saved scene : " . $scene->getId());
             return $this->redirectToRoute('previewProject', array('sceneId'=> $scene->getId()));
         }
@@ -57,7 +58,7 @@ class SceneFormController extends BaseController
         ));
 
         $formSceneBuilder
-            ->add('id', HiddenType::class)
+            ->add('id', HiddenType::class, array('mapped' => false, 'data' => $entityToEdit->getId()))
             ->add('title', TextType::class)
             ->add('description', TextareaType::class, array('required' => false))
             ->add('conditions', TextareaType::class, array('required' => false))
@@ -76,15 +77,18 @@ class SceneFormController extends BaseController
         }
 
         $entityFactory = $this->get('entity_factory');
-
+        $id = $form["id"]->getData();
+        
         $project = $form["project"]->getData();
         $title = $form["title"]->getData();
         $description = $form["description"]->getData();
         $conditions = $form["conditions"]->getData();
         $actions = $form["actions"]->getData();
         $data = $form["data"]->getData();
-        
-        $scene = $entityFactory->makeScene($title, $project);
+
+        $scene = $entityFactory->loadOrEmptyScene($id);
+        $scene->setTitle($title);
+        $scene->setProject($project);
         $scene->setDescription($description);
         $scene->setConditions($conditions);
         $scene->setActions($actions);

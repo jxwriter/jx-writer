@@ -35,7 +35,9 @@
             <td><a href="{{ path("mediaList", { "sceneId" : item.scene.id }) }}">{{ item.scene.title }} (#{{ item.scene.id }})</a></td>
             <td>{{ item.scene.project.title }}</td>
 			<td>
-				
+				<ul class="actions">
+                <li><a href="{{ path("mediaForm", { "editId" : item.id }) }}">Editer</a></li>
+                </ul>
             </td>
                     
     	</tr>
