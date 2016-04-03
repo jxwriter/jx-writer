@@ -108,6 +108,7 @@ class ApiGetSceneController extends Controller
         $result["conditions"] = $scene->getConditions();
         $result["medias"] = array();
         $result["connections"] = array();
+        $result["data"] = $scene->getData();
         $result["actions"] = $scene->getActions();
         
     }

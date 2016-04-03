@@ -60,8 +60,15 @@ class ApiCheckPatternController extends Controller
                 if ($match) {
                     $result["debug"][] = "Match !";
                     $result["debug"][] = "Matched scene : " .  $connection->getChildScene()->getTitle() . " #" . $connection->getChildScene()->getId();
-                    if ($isDebug) return $this->makeJsonResponse($result);
-                    else return $this->redirectToRoute('apiGetScene', ["sceneId"=>$connection->getChildScene()->getId()]);    
+                   
+                    if($isDebug) {
+                        return $this->makeJsonResponse($result);
+                    } else {
+                        return $this->forward('AppBundle:ApiGetScene:index', array(
+                            'sceneId'  => $connection->getChildScene()->getId()
+                        ));
+                    }
+
                 } else {
                     $result["debug"][] = "no match.";
                 }
