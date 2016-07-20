@@ -91,6 +91,7 @@ class ConnectionFormController extends BaseController
             ->add('pattern', TextType::class, array('required' => false))
             ->add('position', NumberType::class, array('data' => 0))
             ->add('conditions', TextareaType::class, array('required' => false))
+            ->add('data', TextareaType::class, array('required' => false))
             ->add('save', SubmitType::class);
 
         return $formSceneBuilder->getForm();

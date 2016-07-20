@@ -58,6 +58,11 @@ class Media
     private $position = 0;
 
     /**
+     * @ORM\Column(name="data", type="text", nullable=TRUE)
+     */
+    private $data="";
+
+    /**
      * Get id
      *
      * @return int
@@ -233,5 +238,29 @@ class Media
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Media
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

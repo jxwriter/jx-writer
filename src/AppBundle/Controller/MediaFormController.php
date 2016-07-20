@@ -79,6 +79,7 @@ class MediaFormController extends BaseController
             ->add('content', TextareaType::class, array('required' => true))
             ->add('conditions', TextareaType::class, array('required' => false))
             ->add('position', NumberType::class, array('required' => true, 'data' => 0))
+            ->add('data', TextareaType::class, array('required' => false))
             ->add('save', SubmitType::class);
 
         return $formBuilder->getForm();

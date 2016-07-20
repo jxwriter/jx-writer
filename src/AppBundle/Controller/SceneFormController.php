@@ -63,7 +63,7 @@ class SceneFormController extends BaseController
             ->add('description', TextareaType::class, array('required' => false))
             ->add('conditions', TextareaType::class, array('required' => false))
             ->add('actions', TextareaType::class, array('required' => false))
-            ->add('data', TextType::class, array('required' => false))
+            ->add('data', TextareaType::class, array('required' => false))
             ->add('save', SubmitType::class);
 
         return $formSceneBuilder->getForm();

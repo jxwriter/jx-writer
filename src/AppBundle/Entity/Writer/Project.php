@@ -36,6 +36,11 @@ class Project
      */
     private $variables;
 
+    /**
+     * @ORM\Column(name="data", type="text", nullable=TRUE)
+     */
+    private $data="";
+
 
     /**
      * Get id
@@ -117,5 +122,29 @@ class Project
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return Project
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

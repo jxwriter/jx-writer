@@ -60,9 +60,9 @@ class Scene
     private $description = "";
 
     /**
-     * @ORM\Column(name="data", type="string", length=255, nullable=TRUE)
+     * @ORM\Column(name="data", type="text", nullable=TRUE)
      */
-    private $data = "";
+    private $data="";
 
 
     public function __construct()

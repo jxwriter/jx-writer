@@ -51,6 +51,11 @@ class SceneConnection
      */
     private $position = 0;
 
+    /**
+     * @ORM\Column(name="data", type="text", nullable=TRUE)
+     */
+    private $data="";
+
 
     /**
      * Get id
@@ -204,5 +209,29 @@ class SceneConnection
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     *
+     * @return SceneConnection
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }
