@@ -1,5 +1,6 @@
 jx-writer
 =========
 
-Symfony based.
+Basé sur Symfony. 
+
 
