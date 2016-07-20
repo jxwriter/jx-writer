@@ -1,3 +1,4 @@
+/app/config/parameters_ovh.yml
 /app/config/parameters.yml
 /build/
 /phpunit.xml
