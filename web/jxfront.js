@@ -8,7 +8,7 @@ JX.log = function(message, object){
 JX.Server = function(){
 
 	//prod conf
-	this.baseUrl = "http://jx.tlabmars.org/sandbox/prototypes/jx-writer/web/";
+	this.baseUrl = "http://jxwriter.org/";
 
 	//personnal dev conf
 	if (window.location.href.indexOf("jxwriter.local") != -1){
